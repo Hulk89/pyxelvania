@@ -1,8 +1,6 @@
 # Pyxel config
-FPS = 60
-SHOW_CURSOR = False
-WIDTH = 160
-HEIGHT = 120
+WIDTH = 128
+HEIGHT = 64
 MID_W = WIDTH / 2
 MID_H = HEIGHT / 2
 
@@ -13,6 +11,23 @@ SLIDE_TILE = (1, 2)
 LOCKED_TILE = (3, 3)
 DOOR_TILE_R = (4, 3)
 DOOR_TILE_L = (5, 3)
+
+#items
+ITEM_KEY   = (2, 2)
+ITEM_HEART = (2, 5)
+ITEM_CKPT  = (2, 4)
+ITEM_SLIDE = (0, 5)
+ITEM_DBJMP = (1, 5)
+
+# NPC
+NPC_1 = (6, 2)
+NPC_2 = (6, 3)
+
+# ENEMY
+ENEMY_1 = (5, 0)
+ENEMY_2 = (5, 1)
+ENEMY_3 = (7, 0)
+ENEMY_4 = (7, 1)
 
 
 # colors
