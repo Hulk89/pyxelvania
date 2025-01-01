@@ -11,7 +11,7 @@ class App:
         px.init(128, 128)
         px.load("./assets/pyxelvania.pyxres")
         self.t = time()        
-        self.player = Player((60, 100))
+        self.player = Player((60, 40))
         self.player.set_draw_layer(Layer.obj)
         px.run(self.update, self.draw)
 

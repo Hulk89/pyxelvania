@@ -33,7 +33,6 @@ def on_pressed_slide():
     return px.btnp(px.GAMEPAD1_BUTTON_B) or \
            px.btnp(px.KEY_Z)
 
-
 def on_pressed_jump():
     return px.btnp(px.GAMEPAD1_BUTTON_A) or \
            px.btnp(px.KEY_SPACE)
@@ -64,20 +63,6 @@ class Player(CircleCollisionInterface, Updatable, Drawable):
     @property
     def img(self):
         return self.sprite.img
-
-    def circle_collide_with(self, entity) -> bool:
-        w, h = self.img.w, self.img.h
-        x, y = self.pos
-        e_w, e_h = entity.img.w, entity.img.h
-        e_x, e_y =  entity.pos
-        dist_square = (e_x - x) ** 2 + (e_y - y) ** 2
-
-        rad = (w + h) / 4
-        e_rad = (e_w + e_h) / 4
-        rad_square = (rad + e_rad) ** 2
-
-
-        return rad_square >= dist_square
 
     def change_state(self, state):
         self.state = state
@@ -111,22 +96,24 @@ class Player(CircleCollisionInterface, Updatable, Drawable):
             else:
                 self.change_state("idle")
 
+        # NOTE: position update
+        # TODO: slide adjustment
         self.dy = min(4, max(-6, self.dy))
         x, y = push_back(self.pos[0], self.pos[1], self.dx, self.dy)
-        self.pos = (x, y)
+        self.pos = (int(x), int(y))
 
 
         # NOTE: state transition
-        if self.state == "jump-up" and self.dy >=0:
+        if self.state == "jump-up" and self.dy >0:
             self.change_state("jump-down")
-        elif self.state == "jump-down" and is_colliding(x, y+1, True):
+        elif self.state == "jump-down" and is_colliding(x, y+1, self.dy > 0, 8, 8): 
             self.change_state("idle")
         elif self.state == "attack" and self.sprite.is_ended:
             self.change_state("idle")
         elif self.state == "slide" and (t - self.sprite.start_t) > 0.5:
             self.change_state("idle")
 
-
+        # NOTE: sprite update frame
         self.sprite.update(dt, t)
 
     def draw(self):
