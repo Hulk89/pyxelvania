@@ -9,11 +9,11 @@ def get_tile(tile_x, tile_y, bank=0):
     return px.tilemaps[bank].pget(tile_x, tile_y)
 
 
-def is_colliding(x, y, is_falling, is_sliding=False):
+def is_colliding(x, y, is_falling, is_sliding=False, size=8):
     x1 = px.floor(x) // 8
     y1 = px.floor(y) // 8
-    x2 = (px.ceil(x) + 7) // 8
-    y2 = (px.ceil(y) + 7) // 8
+    x2 = (px.ceil(x) + size-1) // 8
+    y2 = (px.ceil(y) + size-1) // 8
     for yi in range(y1, y2 + 1):
         for xi in range(x1, x2 + 1):
             if get_tile(xi, yi) == WALL_TILE:

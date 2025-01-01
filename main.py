@@ -11,13 +11,12 @@ class App:
         px.load("./assets/pyxelvania.pyxres")
         self.t = time()        
         self.player = Player((60, 40))
-        self.player.set_draw_layer(Layer.obj)
         px.run(self.update, self.draw)
 
 
     def update(self):
         current_t = time()
-        dt = self.t - current_t
+        dt = current_t - self.t
         self.t = current_t
         
         for o in Updatable.updatables:

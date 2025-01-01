@@ -6,9 +6,11 @@ from .base import (
     CircleCollisionInterface,
     ASprite,
     Image,
+    Layer,
 )
 
 from .utils import push_back, is_colliding
+from .fireball import FireBall
 
 PLAYER = {
     "idle":      {"frames": [(8,0,8,8), (24,0,8,8)],  "loop": True,  "cboxes": None},
@@ -55,6 +57,7 @@ class Player(CircleCollisionInterface, Updatable, Drawable):
                             for k, v in PLAYER.items()}
         super().__init__(pos, 8, 8)
         self.start_update()
+        self.set_draw_layer(Layer.obj)
 
     @property
     def sprite(self):
@@ -90,6 +93,14 @@ class Player(CircleCollisionInterface, Updatable, Drawable):
             self.dx *= 1.5  # NOTE: faster move
         elif on_pressed_attack():
             self.change_state("attack")
+            x, y = self.pos
+            if self.direction_right:
+                fb_pos = (x + 8, y + 3)
+            else:
+                fb_pos = (x, y + 3)
+            fb = FireBall(fb_pos, self.direction_right)
+            fb.start_update()
+            fb.set_draw_layer(Layer.fg)
         elif self.state not in ["jump-up", "jump-down", "attack", "slide"]:
             if on_pressed_left() or on_pressed_right():
                 self.change_state("run")
