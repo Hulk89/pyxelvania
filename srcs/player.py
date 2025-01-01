@@ -97,16 +97,15 @@ class Player(CircleCollisionInterface, Updatable, Drawable):
                 self.change_state("idle")
 
         # NOTE: position update
-        # TODO: slide adjustment
         self.dy = min(4, max(-6, self.dy))
-        x, y = push_back(self.pos[0], self.pos[1], self.dx, self.dy)
+        x, y = push_back(self.pos[0], self.pos[1], self.dx, self.dy, self.state == "slide")
         self.pos = (int(x), int(y))
 
 
         # NOTE: state transition
-        if self.state == "jump-up" and self.dy >0:
+        if self.state == "jump-up" and self.dy > 0:
             self.change_state("jump-down")
-        elif self.state == "jump-down" and is_colliding(x, y+1, self.dy > 0, 8, 8): 
+        elif self.state == "jump-down" and is_colliding(x, y+1, self.dy > 0):
             self.change_state("idle")
         elif self.state == "attack" and self.sprite.is_ended:
             self.change_state("idle")

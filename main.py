@@ -1,7 +1,6 @@
 from time import time
 
 import pyxel as px
-from rich import print
 
 from srcs.constants import BLACK, PURPLE
 from srcs.base import Layer, Updatable
@@ -21,10 +20,8 @@ class App:
         dt = self.t - current_t
         self.t = current_t
         
-        print("B", self.player.pos)
         for o in Updatable.updatables:
             o.update(dt, self.t)
-        print("A", self.player.pos)
         
     def draw(self):
         px.cls(BLACK)
