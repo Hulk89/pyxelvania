@@ -13,35 +13,42 @@ from .utils import push_back, colliding_wall
 from .fireball import FireBall
 
 PLAYER = {
-    "idle":      {"frames": [(8,0,8,8), (24,0,8,8)],  "loop": True,  "cboxes": None},
-    "run":       {"frames": [(8,0,8,8), (16,0,8,8)],  "loop": True,  "cboxes": None},
-    "attack":    {"frames": [(8,8,8,8), (16,8,8,8)],  "loop": False, "cboxes": None},
-    "jump-up":   {"frames": [(24,0,8,8), (24,8,8,8)], "loop": True,  "cboxes": [(0,1,8,7), (0,0,8,8)]},
-    "jump-down": {"frames": [(24,0,8,8)],             "loop": False, "cboxes": [(0,1,8,7)]},
-    "slide":     {"frames": [(24,0,8,8), (32,0,8,8)], "loop": False, "cboxes": [(0,1,8,7), (0,2,8,6)]},
+    "idle": {"frames": [(8, 0, 8, 8), (24, 0, 8, 8)], "loop": True, "cboxes": None},
+    "run": {"frames": [(8, 0, 8, 8), (16, 0, 8, 8)], "loop": True, "cboxes": None},
+    "attack": {"frames": [(8, 8, 8, 8), (16, 8, 8, 8)], "loop": False, "cboxes": None},
+    "jump-up": {
+        "frames": [(24, 0, 8, 8), (24, 8, 8, 8)],
+        "loop": True,
+        "cboxes": [(0, 1, 8, 7), (0, 0, 8, 8)],
+    },
+    "jump-down": {"frames": [(24, 0, 8, 8)], "loop": False, "cboxes": [(0, 1, 8, 7)]},
+    "slide": {
+        "frames": [(24, 0, 8, 8), (32, 0, 8, 8)],
+        "loop": False,
+        "cboxes": [(0, 1, 8, 7), (0, 2, 8, 6)],
+    },
 }
 FREQ = 0.2
 
 
 def on_pressed_left():
-    return px.btn(px.GAMEPAD1_BUTTON_DPAD_LEFT) or \
-           px.btn(px.KEY_LEFT)
+    return px.btn(px.GAMEPAD1_BUTTON_DPAD_LEFT) or px.btn(px.KEY_LEFT)
+
 
 def on_pressed_right():
-    return px.btn(px.GAMEPAD1_BUTTON_DPAD_RIGHT) or \
-           px.btn(px.KEY_RIGHT)
+    return px.btn(px.GAMEPAD1_BUTTON_DPAD_RIGHT) or px.btn(px.KEY_RIGHT)
+
 
 def on_pressed_slide():
-    return px.btnp(px.GAMEPAD1_BUTTON_B) or \
-           px.btnp(px.KEY_Z)
+    return px.btnp(px.GAMEPAD1_BUTTON_B) or px.btnp(px.KEY_Z)
+
 
 def on_pressed_jump():
-    return px.btnp(px.GAMEPAD1_BUTTON_A) or \
-           px.btnp(px.KEY_SPACE)
+    return px.btnp(px.GAMEPAD1_BUTTON_A) or px.btnp(px.KEY_SPACE)
+
 
 def on_pressed_attack():
-    return px.btnp(px.GAMEPAD1_BUTTON_X) or \
-           px.btnp(px.KEY_X)
+    return px.btnp(px.GAMEPAD1_BUTTON_X) or px.btnp(px.KEY_X)
 
 
 class Player(CircleCollisionInterface, Updatable, Drawable):
@@ -51,10 +58,10 @@ class Player(CircleCollisionInterface, Updatable, Drawable):
         self.dy = 0
 
         self.state = "idle"
-        self.asprites = {k: ASprite([Image(*uvwh) for uvwh in v["frames"]],
-                                    FREQ,
-                                    loop=v["loop"])
-                            for k, v in PLAYER.items()}
+        self.asprites = {
+            k: ASprite([Image(*uvwh) for uvwh in v["frames"]], FREQ, loop=v["loop"])
+            for k, v in PLAYER.items()
+        }
         super().__init__(pos, 8, 8)
         self.start_update()
         self.set_draw_layer(Layer.obj)
@@ -109,14 +116,15 @@ class Player(CircleCollisionInterface, Updatable, Drawable):
 
         # NOTE: position update
         self.dy = min(4, max(-6, self.dy))
-        x, y = push_back(self.pos[0], self.pos[1], self.dx, self.dy, self.state == "slide")
+        x, y = push_back(
+            self.pos[0], self.pos[1], self.dx, self.dy, self.state == "slide"
+        )
         self.pos = (int(x), int(y))
-
 
         # NOTE: state transition
         if self.state == "jump-up" and self.dy > 0:
             self.change_state("jump-down")
-        elif self.state == "jump-down" and colliding_wall(x, y+1, self.dy > 0):
+        elif self.state == "jump-down" and colliding_wall(x, y + 1, self.dy > 0):
             self.change_state("idle")
         elif self.state == "attack" and self.sprite.is_ended:
             self.change_state("idle")
@@ -127,5 +135,5 @@ class Player(CircleCollisionInterface, Updatable, Drawable):
         self.sprite.update(dt, t)
 
     def draw(self):
-        self.img.flip = (self.direction_right == False)
+        self.img.flip = self.direction_right == False
         self.sprite.draw(self.pos)

@@ -7,13 +7,12 @@ MID_W = WIDTH / 2
 MID_H = HEIGHT / 2
 
 # tiles
-FLOOR_TILE  = (1, 3)
-WALL_TILE   = (0, 2)
-SLIDE_TILE  = (1, 2)
+FLOOR_TILE = (1, 3)
+WALL_TILE = (0, 2)
+SLIDE_TILE = (1, 2)
 LOCKED_TILE = (3, 3)
 DOOR_TILE_R = (4, 3)
 DOOR_TILE_L = (5, 3)
-
 
 
 # colors

@@ -8,6 +8,7 @@ from .constants import (
     DOOR_TILE_L,
 )
 
+
 def get_tile(tile_x, tile_y, bank=0):
     return px.tilemaps[bank].pget(tile_x, tile_y)
 
@@ -15,13 +16,14 @@ def get_tile(tile_x, tile_y, bank=0):
 def colliding_wall(x, y, is_falling, is_sliding=False, size=8):
     x1 = px.floor(x) // 8
     y1 = px.floor(y) // 8
-    x2 = (px.ceil(x) + size-1) // 8
-    y2 = (px.ceil(y) + size-1) // 8
+    x2 = (px.ceil(x) + size - 1) // 8
+    y2 = (px.ceil(y) + size - 1) // 8
     for yi in range(y1, y2 + 1):
         for xi in range(x1, x2 + 1):
             tile = get_tile(xi, yi)
-            if tile in [WALL_TILE, LOCKED_TILE, DOOR_TILE_L, DOOR_TILE_L] or \
-               (tile == SLIDE_TILE and not is_sliding):
+            if tile in [WALL_TILE, LOCKED_TILE, DOOR_TILE_L, DOOR_TILE_L] or (
+                tile == SLIDE_TILE and not is_sliding
+            ):
                 return tile
     if is_falling and y % 8 == 1:
         for xi in range(x1, x2 + 1):
@@ -49,4 +51,3 @@ def push_back(x, y, dx, dy, is_sliding=False):
 def is_wall(x, y):
     tile = get_tile(x // 8, y // 8)
     return tile == FLOOR_TILE or tile == WALL_TILE
-

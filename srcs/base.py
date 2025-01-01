@@ -5,6 +5,7 @@ import pyxel as px
 
 from .constants import PURPLE
 
+
 class Layer:
     bg = []  # 배경
     obj = []  # 캐릭터, object
@@ -17,8 +18,10 @@ class Updatable(ABC):
     @abstractmethod
     def update(self, dt, t):
         pass
+
     def start_update(self):
         self.updatables.append(self)
+
     def stop_update(self):
         self.updatables.remove(self)
 
@@ -40,6 +43,7 @@ class Drawable(ABC):
     def stop_draw(self):
         self.layer.remove(self)
 
+
 class CircleCollisionInterface:
     def __init__(self, pos, w, h):
         self.pos = pos
@@ -49,16 +53,15 @@ class CircleCollisionInterface:
 
     def collide_with(self, entity):
         x, y = self.pos
-        e_x, e_y =  entity.pos
+        e_x, e_y = entity.pos
         dist_square = (e_x - x) ** 2 + (e_y - y) ** 2
         rad_square = (self.radius + entity.radius) ** 2
 
         return rad_square >= dist_square
 
 
-
 class Image:
-    def __init__(self, u, v, w, h, flip=False,bank=0):
+    def __init__(self, u, v, w, h, flip=False, bank=0):
         self.bank = bank
         self.u = u
         self.v = v
@@ -111,7 +114,7 @@ class ASprite(Sprite):
 
     def update(self, _, t):
         """
-        t: 현재 시간(times()) 
+        t: 현재 시간(times())
         """
         if t - self.pt >= self.freq:
             self.frame_count += 1
