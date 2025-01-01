@@ -18,7 +18,6 @@ DX = 60
 class FireBall(CircleCollisionInterface, Updatable, Drawable):
     def __init__(self, pos, direction_right):
         self.dx = DX if direction_right else -DX
-        print(self.dx)
         self.sprite = Sprite(Image(*FIREBALL), PURPLE)
         super().__init__(pos, 3, 3)
 
