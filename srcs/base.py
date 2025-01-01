@@ -98,10 +98,16 @@ class ASprite(Sprite):
         self.frame_count = 0
         self.freq = freq
         self.pt = time()
+        self.start_t = time()
         self.loop = loop
         self.img = frames[self.frame_count]
         self.is_ended = False
         super().__init__(self.img, colkey=colkey)
+
+    def reset(self):
+        self.frame_count = 0
+        self.start_t = time()
+        self.is_ended = False
 
     def update(self, _, t):
         """

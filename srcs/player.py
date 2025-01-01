@@ -79,6 +79,9 @@ class Player(CircleCollisionInterface, Updatable, Drawable):
 
         return rad_square >= dist_square
 
+    def change_state(self, state):
+        self.state = state
+        self.asprites[state].reset()
 
     def update(self, dt, t):
         # NOTE: position delta calculation
@@ -95,36 +98,37 @@ class Player(CircleCollisionInterface, Updatable, Drawable):
         # NOTE: state assign
         if on_pressed_jump():
             self.state = "jump-up"
-            self.dy = -6
+            self.change_state("jump-up")
+            self.dy = -4
         elif on_pressed_slide():
-            self.state = "slide"
+            self.change_state("slide")
             self.dx *= 1.5  # NOTE: faster move
         elif on_pressed_attack():
-            self.state = "attack"
+            self.change_state("attack")
         elif self.state not in ["jump-up", "jump-down", "attack", "slide"]:
             if on_pressed_left() or on_pressed_right():
-                self.state = "run"
+                self.change_state("run")
             else:
-                self.state = "idle"
+                self.change_state("idle")
 
-        self.dy = min(6, max(-6, self.dy))
-        # TODO: Bug!!
-        #x, y = push_back(self.pos[0], self.pos[1], self.dx, self.dy)
-        x, y = self.pos[0] + self.dx, self.pos[1] + self.dy
-
-        print(x, y)
-        self.pos = (x, self.pos[1])
+        self.dy = min(4, max(-6, self.dy))
+        x, y = push_back(self.pos[0], self.pos[1], self.dx, self.dy)
+        self.pos = (x, y)
 
 
         # NOTE: state transition
         if self.state == "jump-up" and self.dy >=0:
-            self.state = "jump-down"
-        if self.state == "jump-down" and is_colliding(x, y+1, True):
-            self.state = "idle"
+            self.change_state("jump-down")
+        elif self.state == "jump-down" and is_colliding(x, y+1, True):
+            self.change_state("idle")
+        elif self.state == "attack" and self.sprite.is_ended:
+            self.change_state("idle")
+        elif self.state == "slide" and (t - self.sprite.start_t) > 0.5:
+            self.change_state("idle")
+
 
         self.sprite.update(dt, t)
 
     def draw(self):
         self.img.flip = (self.direction_right == False)
-        print(self.img.flip)
         self.sprite.draw(self.pos)

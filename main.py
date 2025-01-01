@@ -3,16 +3,15 @@ from time import time
 import pyxel as px
 from rich import print
 
-from srcs.constants import BLACK
+from srcs.constants import BLACK, PURPLE
 from srcs.base import Layer, Updatable
 from srcs.player import Player
 class App:
     def __init__(self):
-        px.init(160, 120)
+        px.init(128, 128)
         px.load("./assets/pyxelvania.pyxres")
         self.t = time()        
-
-        self.player = Player((60, 60))
+        self.player = Player((60, 100))
         self.player.set_draw_layer(Layer.obj)
         px.run(self.update, self.draw)
 
@@ -29,6 +28,7 @@ class App:
         
     def draw(self):
         px.cls(BLACK)
+        px.bltm(0,0,0,0,0,128,128, PURPLE)
         for o in Layer.bg:
             o.draw()
         for o in Layer.obj:
