@@ -9,7 +9,7 @@ from .base import (
     Layer,
 )
 
-from .utils import push_back, is_colliding
+from .utils import push_back, colliding_wall
 from .fireball import FireBall
 
 PLAYER = {
@@ -116,7 +116,7 @@ class Player(CircleCollisionInterface, Updatable, Drawable):
         # NOTE: state transition
         if self.state == "jump-up" and self.dy > 0:
             self.change_state("jump-down")
-        elif self.state == "jump-down" and is_colliding(x, y+1, self.dy > 0):
+        elif self.state == "jump-down" and colliding_wall(x, y+1, self.dy > 0):
             self.change_state("idle")
         elif self.state == "attack" and self.sprite.is_ended:
             self.change_state("idle")
