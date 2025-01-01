@@ -12,10 +12,10 @@ LOCKED_TILE = (3, 3)
 DOOR_TILE_R = (4, 3)
 DOOR_TILE_L = (5, 3)
 
-#items
-ITEM_KEY   = (2, 2)
+# items
+ITEM_KEY = (2, 2)
 ITEM_HEART = (2, 5)
-ITEM_CKPT  = (2, 4)
+ITEM_CKPT = (2, 4)
 ITEM_SLIDE = (0, 5)
 ITEM_DBJMP = (1, 5)
 

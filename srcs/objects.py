@@ -1,6 +1,5 @@
-
 from .base import Sprite, Image, Drawable, Updatable, Layer
-                    
+
 
 class KeySprite(Drawable):
     def __init__(self, pos):

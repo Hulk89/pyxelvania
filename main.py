@@ -10,6 +10,7 @@ from srcs.base import Layer, Updatable
 from srcs.player import Player
 from srcs.utils import extract_obj_from_tilemap
 
+
 class App:
     def load_map(self):
         self.x = 0
@@ -20,8 +21,8 @@ class App:
         self.w = 128
         self.h = 64
         self.removes = extract_obj_from_tilemap(
-            self.x, self.y, self.bank,
-            self.u, self.v, self.w, self.h)
+            self.x, self.y, self.bank, self.u, self.v, self.w, self.h
+        )
 
     def __init__(self):
         px.init(128, 128)
@@ -43,21 +44,11 @@ class App:
 
     def remove_obj_tile(self):
         for r in self.removes:
-            px.rect((r[0]+r[2]) * 8,
-                    (r[1]+r[3]) * 8,
-                    8,
-                    8,
-                    BLACK)
+            px.rect((r[0] + r[2]) * 8, (r[1] + r[3]) * 8, 8, 8, BLACK)
+
     def draw(self):
         px.cls(BLACK)
-        px.bltm(self.x,
-                self.y,
-                self.bank,
-                self.u,
-                self.v,
-                self.w,
-                self.h,
-                PURPLE)
+        px.bltm(self.x, self.y, self.bank, self.u, self.v, self.w, self.h, PURPLE)
         self.remove_obj_tile()
 
         for o in Layer.bg:
