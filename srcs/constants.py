@@ -5,6 +5,7 @@ MID_W = WIDTH / 2
 MID_H = HEIGHT / 2
 
 # tiles
+BLANK_TILE = (0, 0)
 FLOOR_TILE = (1, 3)
 WALL_TILE = (0, 2)
 SLIDE_TILE = (1, 2)
