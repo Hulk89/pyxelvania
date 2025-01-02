@@ -26,7 +26,8 @@ class FireBall(CircleCollisionInterface, Updatable, Drawable):
         x += int(self.dx * dt)
         self.pos = (x, y)
 
-        if colliding_wall(x, y, False, False, 3):
+        tile, _ = colliding_wall(x, y, False, False, 3)
+        if tile:
             ParticlesExplosion(
                 self.pos,
                 [ORANGE, YELLOW, PURPLE],
