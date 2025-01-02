@@ -75,8 +75,9 @@ class Player(CircleCollisionInterface, Updatable, Drawable):
         return self.sprite.img
 
     def change_state(self, state):
-        self.state = state
-        self.asprites[state].reset()
+        if state != self.state:
+            self.state = state
+            self.asprites[state].reset()
 
     def update(self, dt, t):
         # NOTE: position delta calculation
@@ -134,6 +135,7 @@ class Player(CircleCollisionInterface, Updatable, Drawable):
         # NOTE: sprite update frame
         self.sprite.update(dt, t)
 
+        print(self.sprite.frame_count)
     def draw(self):
         self.img.flip = self.direction_right == False
         self.sprite.draw(self.pos)
