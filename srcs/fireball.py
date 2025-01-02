@@ -1,6 +1,6 @@
 import pyxel as px
 
-from .constants import PURPLE
+from .constants import PURPLE, ORANGE, YELLOW
 from .base import (
     Updatable,
     Drawable,
@@ -8,7 +8,7 @@ from .base import (
     Sprite,
     Image,
 )
-
+from .particles import ParticlesExplosion
 from .utils import colliding_wall
 
 FIREBALL = (32, 8, 3, 3)
@@ -26,7 +26,14 @@ class FireBall(CircleCollisionInterface, Updatable, Drawable):
         x += int(self.dx * dt)
         self.pos = (x, y)
 
-        if colliding_wall(x + 1, y, False, False, 3):
+        if colliding_wall(x, y, False, False, 3):
+            ParticlesExplosion(
+                self.pos,
+                [ORANGE, YELLOW, PURPLE],
+                vel_range=(10, 20),
+                num_particles=30,
+                acceleration=-1,
+            )
             self.stop_draw()
             self.stop_update()
             del self

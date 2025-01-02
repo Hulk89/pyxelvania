@@ -9,6 +9,7 @@ from srcs.constants import (
 from srcs.base import Layer, Updatable
 from srcs.player import Player
 from srcs.utils import extract_obj_from_tilemap
+from srcs.vector import Vector2D
 
 
 class App:
@@ -29,7 +30,7 @@ class App:
         px.load("./assets/pyxelvania.pyxres")
         self.t = time()
 
-        self.player = Player((60, 40))
+        self.player = Player(Vector2D(60, 40))
         self.load_map()
 
         px.run(self.update, self.draw)
@@ -47,6 +48,7 @@ class App:
             px.rect((r[0] + r[2]) * 8, (r[1] + r[3]) * 8, 8, 8, BLACK)
 
     def draw(self):
+        # px.camera(0, -px.frame_count // 8)
         px.cls(BLACK)
         px.bltm(self.x, self.y, self.bank, self.u, self.v, self.w, self.h, PURPLE)
         self.remove_obj_tile()

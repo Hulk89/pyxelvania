@@ -9,6 +9,7 @@ from .base import (
     Layer,
 )
 
+from .vector import Vector2D
 from .utils import push_back, colliding_wall
 from .fireball import FireBall
 
@@ -101,11 +102,10 @@ class Player(CircleCollisionInterface, Updatable, Drawable):
             self.dx *= 1.5  # NOTE: faster move
         elif on_pressed_attack():
             self.change_state("attack")
-            x, y = self.pos
             if self.direction_right:
-                fb_pos = (x + 8, y + 3)
+                fb_pos = self.pos + Vector2D(8, 3)
             else:
-                fb_pos = (x, y + 3)
+                fb_pos = self.pos + Vector2D(0, 3)
             fb = FireBall(fb_pos, self.direction_right)
             fb.start_update()
             fb.set_draw_layer(Layer.fg)
@@ -117,10 +117,8 @@ class Player(CircleCollisionInterface, Updatable, Drawable):
 
         # NOTE: position update
         self.dy = min(4, max(-6, self.dy))
-        x, y = push_back(
-            self.pos[0], self.pos[1], self.dx, self.dy, self.state == "slide"
-        )
-        self.pos = (int(x), int(y))
+        x, y = push_back(*self.pos, self.dx, self.dy, self.state == "slide")
+        self.pos = Vector2D(int(x), int(y))
 
         # NOTE: state transition
         if self.state == "jump-up" and self.dy > 0:
@@ -135,7 +133,6 @@ class Player(CircleCollisionInterface, Updatable, Drawable):
         # NOTE: sprite update frame
         self.sprite.update(dt, t)
 
-        print(self.sprite.frame_count)
     def draw(self):
         self.img.flip = self.direction_right == False
         self.sprite.draw(self.pos)
