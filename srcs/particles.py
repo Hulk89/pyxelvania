@@ -25,7 +25,6 @@ class Particle:
     def update(self, dt):
         self.remain_time -= dt
         self.vel += self.acc * dt
-        print(self.vel)
         self.pos += self.vel * dt
 
     def draw(self):
