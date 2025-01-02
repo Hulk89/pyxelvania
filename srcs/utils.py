@@ -20,7 +20,7 @@ from .constants import (
     ENEMY_4,
 )
 
-from .objects import KeySprite
+from .objects import KeyObject, SlideObject, DJumpObject, CKPTObject, HeartObject
 
 
 def get_tile(tile_x, tile_y, bank=0):
@@ -90,6 +90,14 @@ def extract_obj_from_tilemap(x, y, b, u, v, w, h):
             if tile in remove_obj:
                 removes.append((x, y, cx, cy))
                 if tile == ITEM_KEY:
-                    ks = KeySprite(((x + cx) * 8, (y + cy) * 8))
+                    _ = KeyObject(((x + cx) * 8, (y + cy) * 8))
+                elif tile == ITEM_HEART:
+                    _ = HeartObject(((x + cx) * 8, (y + cy) * 8))
+                elif tile == ITEM_SLIDE:
+                    _ = SlideObject(((x + cx) * 8, (y + cy) * 8))
+                elif tile == ITEM_DBJMP:
+                    _ = DJumpObject(((x + cx) * 8, (y + cy) * 8))
+                elif tile == ITEM_CKPT:
+                    _ = CKPTObject(((x + cx) * 8, (y + cy) * 8))
 
     return removes
