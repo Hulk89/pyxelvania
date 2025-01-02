@@ -43,19 +43,21 @@ def colliding_wall(x, y, is_falling, is_sliding=False, size=8):
         for xi in range(x1, x2 + 1):
             if get_tile(xi, y1 + 1) == FLOOR_TILE:
                 return FLOOR_TILE
-    return False
+    return None
 
 
 def push_back(x, y, dx, dy, is_sliding=False):
     for _ in range(px.ceil(abs(dy))):
         step = max(-1, min(1, dy))
-        if colliding_wall(x, y + step, dy > 0, is_sliding):
+        c_tile = colliding_wall(x, y + step, dy > 0, is_sliding)
+        if c_tile not in [None, DOOR_TILE_R, DOOR_TILE_L]:
             break
         y += step
         dy -= step
     for _ in range(px.ceil(abs(dx))):
         step = max(-1, min(1, dx))
-        if colliding_wall(x + step, y, dy > 0, is_sliding):
+        c_tile = colliding_wall(x + step, y, dy > 0, is_sliding)
+        if c_tile not in [None, DOOR_TILE_R, DOOR_TILE_L]:
             break
         x += step
         dx -= step
