@@ -18,7 +18,7 @@ from srcs.enemies import Enemy
 from srcs.utils import colliding_wall
 from srcs.objects import _Object, _AObject
 
-from srcs.state import GameState, extract_obj_from_tilemap
+from srcs.state import GameState, extract_obj_from_tilemap, load_map
 from srcs.vector import Vector2D
 
 
@@ -69,16 +69,15 @@ def attack_update():
 
 class App:
     def load_map(self):
-        self.x = 0
-        self.y = 0
         self.bank = 0
         self.u = 0
         self.v = 0
-        self.w = 128
-        self.h = 64
+        self.w = 512 
+        self.h = 512
         self.removes = extract_obj_from_tilemap(
-            self.x, self.y, self.bank, self.u, self.v, self.w, self.h
+            self.bank, self.u, self.v, self.w, self.h
         )
+        print(load_map(Vector2D(15, 6)))
 
     def __init__(self):
         px.init(128, 128)
@@ -108,9 +107,12 @@ class App:
             px.rect((r[0] + r[2]) * 8, (r[1] + r[3]) * 8, 8, 8, BLACK)
 
     def draw(self):
-        # px.camera(0, -px.frame_count // 8)
+        p_pos = GameState.player.pos
+        cam_pos = p_pos - Vector2D(64, 32)
+        px.camera(*cam_pos)
         px.cls(BLACK)
-        px.bltm(self.x, self.y, self.bank, self.u, self.v, self.w, self.h, PURPLE)
+        px.bltm(0, 0, self.bank, self.u, self.v, self.w, self.h, PURPLE)
+        px.clip(0, 0, 128,64)
         self.remove_obj_tile()
 
         for o in Layer.bg:
