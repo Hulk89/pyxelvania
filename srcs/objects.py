@@ -40,11 +40,11 @@ class DJumpObject(_Object):
         super().__init__(pos, Image(8, 40, 8, 8))
 
 
-class HeartObject(_AObject):
+class CKPTObject(_AObject):
     def __init__(self, pos):
         super().__init__(pos, [Image(16, 32, 8, 8), Image(24, 32, 8, 8)], 0.4)
 
 
-class CKPTObject(_AObject):
+class HeartObject(_AObject):
     def __init__(self, pos):
         super().__init__(pos, [Image(16, 40, 8, 8), Image(24, 40, 8, 8)], 0.4)

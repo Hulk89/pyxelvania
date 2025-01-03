@@ -53,7 +53,7 @@ class App:
         for e in enemies:
             e.direction_left = True if player.pos.x < e.pos.x else False
             if e.collide_with(player):
-                ParticlesExplosion(player.pos,
+                ParticlesExplosion(player.pos + Vector2D(4, 4),
                                    [RED, RED, GREEN],
                                    duration=0.2,
                                    num_particles=10,
