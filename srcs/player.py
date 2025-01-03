@@ -1,6 +1,7 @@
 import pyxel as px
 
-from .base import (
+from srcs.state import GameState
+from srcs.base import (
     Updatable,
     Drawable,
     CircleCollisionInterface,
@@ -8,11 +9,9 @@ from .base import (
     Image,
     Layer,
 )
-from .constants import LOCKED_TILE, BLANK_TILE
-
-from .vector import Vector2D
-from .utils import push_back, colliding_wall
-from .fireball import FireBall
+from srcs.vector import Vector2D
+from srcs.utils import push_back, colliding_wall
+from srcs.fireball import FireBall
 
 PLAYER = {
     "idle": {"frames": [(8, 0, 8, 8), (24, 0, 8, 8)], "loop": True},
@@ -47,6 +46,7 @@ def on_pressed_attack():
 
 class Player(CircleCollisionInterface, Updatable, Drawable):
     def __init__(self, pos):
+        self.jump_cnt = 0
         self.direction_right = True
         self.dx = 0
         self.dy = 0
@@ -89,11 +89,12 @@ class Player(CircleCollisionInterface, Updatable, Drawable):
             self.dx *= 1.3  # NOTE: faster move
 
         # NOTE: state assign
-        if on_pressed_jump():
+        if on_pressed_jump() and self.jump_cnt < GameState.player_state["max_jump"]:
+            self.jump_cnt += 1
             self.state = "jump-up"
             self.change_state("jump-up")
             self.dy = -4
-        elif on_pressed_slide():
+        elif on_pressed_slide() and GameState.player_state["slide"]:
             self.change_state("slide")
         elif on_pressed_attack():
             self.change_state("attack")
@@ -118,7 +119,8 @@ class Player(CircleCollisionInterface, Updatable, Drawable):
         # NOTE: state transition
         if self.state == "jump-up" and self.dy > 0:
             self.change_state("jump-down")
-        elif self.state == "jump-down" and colliding_wall(x, y + 1, self.dy > 0):
+        elif self.state == "jump-down" and colliding_wall(x, y + 1, self.dy > 0)[0]:
+            self.jump_cnt = 0
             self.change_state("idle")
         elif self.state == "attack" and self.sprite.is_ended:
             self.change_state("idle")

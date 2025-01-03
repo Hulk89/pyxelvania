@@ -16,6 +16,7 @@ from srcs.fireball import FireBall
 from srcs.particles import ParticlesExplosion
 from srcs.enemies import Enemy
 from srcs.utils import colliding_wall
+from srcs.objects import _Object, _AObject
 
 from srcs.state import GameState, extract_obj_from_tilemap
 from srcs.vector import Vector2D
@@ -30,9 +31,20 @@ def locked_tile_update():
     else:
         check_pos = player.pos + Vector2D(-1, 0)
     tile, tile_pos = colliding_wall(*check_pos, player.dy > 0)
-    if tile == LOCKED_TILE:
+    if tile == LOCKED_TILE and GameState.player_state["keys"] > 0:
+        GameState.player_state["keys"] -= 1
         px.tilemaps[0].pset(*tile_pos, BLANK_TILE)
 
+
+def object_update():
+    player = GameState.player
+
+    objs = [o for o in Layer.obj if isinstance(o, _Object) or isinstance(o, _AObject)]
+
+    for o in objs:
+        if o.collide_with(player):
+            o.update_gamestate(GameState.player_state)
+            o.remove()
 
 def attack_update():
     player = GameState.player
@@ -50,7 +62,7 @@ def attack_update():
         for f in fireballs:
             if e.collide_with(f):
                 f.remove()
-                e.hp -= GameState.atk_dmg
+                e.hp -= GameState.player_state["damage"]
                 if e.hp <= 0:
                     e.remove()
     
@@ -73,7 +85,8 @@ class App:
         px.load("./assets/pyxelvania.pyxres")
         self.t = time()
 
-        GameState.player = Player(Vector2D(60, 40))
+        GameState.player = Player(Vector2D(24, 10))
+        GameState.player_state["ckpt_pos"] = (24, 10)
         self.load_map()
 
         px.run(self.update, self.draw)
@@ -83,6 +96,7 @@ class App:
         dt = current_t - self.t
         self.t = current_t
 
+        object_update()
         attack_update()
         locked_tile_update()
 

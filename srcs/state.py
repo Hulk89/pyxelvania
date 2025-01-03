@@ -1,5 +1,7 @@
-from typing import Union
-from .constants import (
+from typing import Union, TYPE_CHECKING
+if TYPE_CHECKING:
+    from srcs.player import Player
+from srcs.constants import (
     NPC_1,
     NPC_2,
     ITEM_KEY,
@@ -12,16 +14,23 @@ from .constants import (
     ENEMY_3,
     ENEMY_4,
 )
-from .objects import KeyObject, SlideObject, DJumpObject, CKPTObject, HeartObject
-from .utils import get_tile
-from .vector import Vector2D
-from .enemies import Enemy1, Enemy2, Enemy3, Enemy4
-from .player import Player
+from srcs.objects import KeyObject, SlideObject, DJumpObject, CKPTObject, HeartObject
+from srcs.utils import get_tile
+from srcs.vector import Vector2D
+from srcs.enemies import Enemy1, Enemy2, Enemy3, Enemy4
 
 
 class GameState:
-    player : Union[None, Player] = None
-    atk_dmg = 2
+    player : Union[None, 'Player'] = None
+    ## player state
+    player_state = {
+        "keys": 0,
+        "hp": 2,
+        "max_jump": 1,
+        "damage": 2,
+        "slide": False,
+        "ckpt_pos": (0, 0)
+    }
 
 
 def extract_obj_from_tilemap(x, y, b, u, v, w, h):
