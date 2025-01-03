@@ -28,16 +28,19 @@ class FireBall(CircleCollisionInterface, Updatable, Drawable):
 
         tile, _ = colliding_wall(x, y, False, False, 3)
         if tile:
-            ParticlesExplosion(
-                self.pos,
-                [ORANGE, YELLOW, PURPLE],
-                vel_range=(10, 20),
-                num_particles=30,
-                acceleration=-1,
-            )
-            self.stop_draw()
-            self.stop_update()
-            del self
+            self.remove()
 
     def draw(self):
         self.sprite.draw(self.pos)
+
+    def remove(self):
+        ParticlesExplosion(
+            self.pos,
+            [ORANGE, YELLOW, PURPLE],
+            vel_range=(10, 20),
+            num_particles=30,
+            acceleration=-1,
+        )
+        self.stop_draw()
+        self.stop_update()
+        del self

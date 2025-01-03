@@ -5,22 +5,8 @@ from .constants import (
     WALL_TILE,
     SLIDE_TILE,
     LOCKED_TILE,
-    DOOR_TILE_R,
-    DOOR_TILE_L,
-    NPC_1,
-    NPC_2,
-    ITEM_KEY,
-    ITEM_CKPT,
-    ITEM_HEART,
-    ITEM_SLIDE,
-    ITEM_DBJMP,
-    ENEMY_1,
-    ENEMY_2,
-    ENEMY_3,
-    ENEMY_4,
 )
 
-from .objects import KeyObject, SlideObject, DJumpObject, CKPTObject, HeartObject
 
 def get_tile(tile_x, tile_y, bank=0):
     return px.tilemaps[bank].pget(tile_x, tile_y)
@@ -37,13 +23,12 @@ def colliding_wall(x, y, is_falling, is_sliding=False, size=8):
             if tile in [WALL_TILE, LOCKED_TILE] or (
                 tile == SLIDE_TILE and not is_sliding
             ):
-                return tile, (xi, yi) 
+                return tile, (xi, yi)
     if is_falling and y % 8 == 1:
         for xi in range(x1, x2 + 1):
             if get_tile(xi, y1 + 1) == FLOOR_TILE:
                 return FLOOR_TILE, (xi, y1 + 1)
     return None, None
-
 
 
 def push_back(x, y, dx, dy, is_sliding=False):
@@ -67,39 +52,3 @@ def push_back(x, y, dx, dy, is_sliding=False):
 def is_wall(x, y):
     tile = get_tile(x // 8, y // 8)
     return tile == FLOOR_TILE or tile == WALL_TILE
-
-
-def extract_obj_from_tilemap(x, y, b, u, v, w, h):
-    remove_obj = [
-        NPC_1,
-        NPC_2,
-        ITEM_DBJMP,
-        ITEM_SLIDE,
-        ITEM_HEART,
-        ITEM_CKPT,
-        ITEM_KEY,
-        ENEMY_1,
-        ENEMY_2,
-        ENEMY_3,
-        ENEMY_4,
-    ]
-
-    removes = []
-    for cx in range(u, u + w // 8):
-        for cy in range(v, v + h // 8):
-            tile = get_tile(cx, cy, b)
-            # TODO: make_object
-            if tile in remove_obj:
-                removes.append((x, y, cx, cy))
-                if tile == ITEM_KEY:
-                    _ = KeyObject(((x + cx) * 8, (y + cy) * 8))
-                elif tile == ITEM_HEART:
-                    _ = HeartObject(((x + cx) * 8, (y + cy) * 8))
-                elif tile == ITEM_SLIDE:
-                    _ = SlideObject(((x + cx) * 8, (y + cy) * 8))
-                elif tile == ITEM_DBJMP:
-                    _ = DJumpObject(((x + cx) * 8, (y + cy) * 8))
-                elif tile == ITEM_CKPT:
-                    _ = CKPTObject(((x + cx) * 8, (y + cy) * 8))
-
-    return removes

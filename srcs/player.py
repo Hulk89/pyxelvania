@@ -15,20 +15,12 @@ from .utils import push_back, colliding_wall
 from .fireball import FireBall
 
 PLAYER = {
-    "idle": {"frames": [(8, 0, 8, 8), (24, 0, 8, 8)], "loop": True, "cboxes": None},
-    "run": {"frames": [(8, 0, 8, 8), (16, 0, 8, 8)], "loop": True, "cboxes": None},
-    "attack": {"frames": [(8, 8, 8, 8), (16, 8, 8, 8)], "loop": False, "cboxes": None},
-    "jump-up": {
-        "frames": [(24, 0, 8, 8), (24, 8, 8, 8)],
-        "loop": True,
-        "cboxes": [(0, 1, 8, 7), (0, 0, 8, 8)],
-    },
-    "jump-down": {"frames": [(24, 0, 8, 8)], "loop": False, "cboxes": [(0, 1, 8, 7)]},
-    "slide": {
-        "frames": [(24, 0, 8, 8), (32, 0, 8, 8)],
-        "loop": False,
-        "cboxes": [(0, 1, 8, 7), (0, 2, 8, 6)],
-    },
+    "idle": {"frames": [(8, 0, 8, 8), (24, 0, 8, 8)], "loop": True},
+    "run": {"frames": [(8, 0, 8, 8), (16, 0, 8, 8)], "loop": True},
+    "attack": {"frames": [(8, 8, 8, 8), (16, 8, 8, 8)], "loop": False},
+    "jump-up": {"frames": [(24, 0, 8, 8), (24, 8, 8, 8)], "loop": True},
+    "jump-down": {"frames": [(24, 0, 8, 8)], "loop": False},
+    "slide": {"frames": [(24, 0, 8, 8), (32, 0, 8, 8)], "loop": False},
 }
 FREQ = 0.2
 
@@ -58,7 +50,7 @@ class Player(CircleCollisionInterface, Updatable, Drawable):
         self.direction_right = True
         self.dx = 0
         self.dy = 0
-
+        self.vel = 40
         self.state = "idle"
         self.asprites = {
             k: ASprite([Image(*uvwh) for uvwh in v["frames"]], FREQ, loop=v["loop"])
@@ -86,12 +78,15 @@ class Player(CircleCollisionInterface, Updatable, Drawable):
         self.dy += 0.5
         if on_pressed_left():
             self.direction_right = False
-            self.dx = -2
+            self.dx = -self.vel * dt
         elif on_pressed_right():
             self.direction_right = True
-            self.dx = +2
+            self.dx = self.vel * dt
         else:
             self.dx = 0
+
+        if self.state == "slide":
+            self.dx *= 1.3  # NOTE: faster move
 
         # NOTE: state assign
         if on_pressed_jump():
@@ -100,7 +95,6 @@ class Player(CircleCollisionInterface, Updatable, Drawable):
             self.dy = -4
         elif on_pressed_slide():
             self.change_state("slide")
-            self.dx *= 1.5  # NOTE: faster move
         elif on_pressed_attack():
             self.change_state("attack")
             if self.direction_right:
@@ -119,7 +113,7 @@ class Player(CircleCollisionInterface, Updatable, Drawable):
         # NOTE: position update
         self.dy = min(4, max(-6, self.dy))
         x, y = push_back(*self.pos, self.dx, self.dy, self.state == "slide")
-        self.pos = Vector2D(int(x), int(y))
+        self.pos = Vector2D(x, int(y))
 
         # NOTE: state transition
         if self.state == "jump-up" and self.dy > 0:
@@ -143,7 +137,6 @@ class Player(CircleCollisionInterface, Updatable, Drawable):
         tile, tile_pos = colliding_wall(*check_pos, self.dy > 0)
         if tile == LOCKED_TILE:
             px.tilemaps[0].pset(*tile_pos, BLANK_TILE)
-
 
     def draw(self):
         self.img.flip = self.direction_right == False
