@@ -70,14 +70,20 @@ def attack_update():
 class App:
     def load_map(self):
         self.bank = 0
-        self.u = 0
-        self.v = 0
-        self.w = 512 
-        self.h = 512
+        
+        maps = load_map(Vector2D(15, 6))
+        xywh = maps[0]["xywh"]
+        self.u = xywh[0] * 8
+        self.v = xywh[1] * 8
+        self.w = xywh[2] * 8
+        self.h = xywh[3] * 8
+        # NOTE: 이 부분만 고치면 됨
+        self.doors = [(door[0]*8, door[1]*8, 8, 8) for door in maps[0]["doors"]]
+        print(self.doors)
         self.removes = extract_obj_from_tilemap(
             self.bank, self.u, self.v, self.w, self.h
         )
-        print(load_map(Vector2D(15, 6)))
+
 
     def __init__(self):
         px.init(128, 128)
