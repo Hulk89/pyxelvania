@@ -1,3 +1,4 @@
+from typing import Union
 from .constants import (
     NPC_1,
     NPC_2,
@@ -15,10 +16,11 @@ from .objects import KeyObject, SlideObject, DJumpObject, CKPTObject, HeartObjec
 from .utils import get_tile
 from .vector import Vector2D
 from .enemies import Enemy1, Enemy2, Enemy3, Enemy4
+from .player import Player
 
 
 class GameState:
-    player = None
+    player : Union[None, Player] = None
     atk_dmg = 2
 
 

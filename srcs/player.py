@@ -128,16 +128,6 @@ class Player(CircleCollisionInterface, Updatable, Drawable):
         # NOTE: sprite update frame
         self.sprite.update(dt, t)
 
-        # NOTE: remove locked tile
-        # TODO: only when keys are added. maybe it will added to main or gamestate
-        if self.direction_right:
-            check_pos = self.pos + Vector2D(1, 0)
-        else:
-            check_pos = self.pos + Vector2D(-1, 0)
-        tile, tile_pos = colliding_wall(*check_pos, self.dy > 0)
-        if tile == LOCKED_TILE:
-            px.tilemaps[0].pset(*tile_pos, BLANK_TILE)
-
     def draw(self):
         self.img.flip = self.direction_right == False
         self.sprite.draw(self.pos)
