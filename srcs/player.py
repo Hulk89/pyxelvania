@@ -118,13 +118,13 @@ class Player(CircleCollisionInterface, Updatable, Drawable):
         if self.state == "jump-up" and self.dy > 0:
             self.change_state("jump-down")
         elif self.state == "jump-down" and colliding_wall(x, y + 1, self.dy > 0)[0]:
-            self.jump_cnt = 0
             self.change_state("idle")
         elif self.state == "attack" and self.sprite.is_ended:
             self.change_state("idle")
         elif self.state == "slide" and (t - self.sprite.start_t) > 0.5:
             self.change_state("idle")
-
+        if colliding_wall(x, y+1, self.dy > 0)[0]:
+            self.jump_cnt = 0
         # NOTE: sprite update frame
         self.sprite.update(dt, t)
 
