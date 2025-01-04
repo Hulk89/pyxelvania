@@ -1,4 +1,4 @@
-from typing import Union, TYPE_CHECKING
+from typing import Union, TYPE_CHECKING, Tuple
 if TYPE_CHECKING:
     from srcs.player import Player
 from srcs.constants import (
@@ -63,58 +63,85 @@ def _find_doors(x, y, w, h):
             doors.append((x + w - 1, y_i))
     return doors
 
+
+def _is_in(xx, yy, x, y, w, h):
+    return xx >= x and xx < x+w and yy >= y and yy < y+h
+
+def _link_doors_to_map(maps):
+    for i, curr_map in enumerate(maps):
+        link_to = []
+        for door in curr_map["doors"]:
+            find_pos = Vector2D(door[0], door[1])
+            if get_tile(door[0], door[1]) == DOOR_TILE_R:
+                find_pos += Vector2D(1, 0)
+            else:
+                find_pos += Vector2D(-1, 0)
+
+            for j, cand_map in enumerate(maps):
+                if i == j:
+                    continue
+                if _is_in(*find_pos, *cand_map["xywh"]):
+                    link_to.append(j)
+        curr_map["link_to"] = link_to
+
+
+
 def load_map(start_door=Vector2D(0, 0), max_search=64):
     maps = []
 
-    def find_contour(s_x, s_y):
+    def find_contour(s_x, s_y) -> Tuple[int, int, int, int]:
         # NOTE: 공간은 항상 직사각형이며, WALL_TILE과 DOOR_TILE_<R,L> 로 이루어져있다고 가정한다.
-        right = None
-        left = None
+        left = -1
+        right = -1
+        top = -1
+        bottom = -1
+
         if get_tile(s_x, s_y) == DOOR_TILE_R:  # NOTE: 오른쪽 벽
             right = s_x
         else:
             left = s_x
+            
 
-        top = None
-        bottom = None
         # NOTE: floor only can wall_tile >= 16
         for y_i in range(1, max_search):
-            if left:
+            if left != -1:
                 if _is_rectangle(s_x, s_y + y_i, 16, 1):
                     bottom = s_y + y_i
             else:
                 if _is_rectangle(s_x - 15, s_y + y_i, 16, 1):
                     bottom = s_y + y_i
-            if bottom:
+            if bottom != -1:
                 break
 
         for y_i in range(1, max_search):
-            if left:
+            if left != -1:
                 if _is_rectangle(s_x, s_y - y_i, 16, 1):
                     top = s_y - y_i
             else:
                 if _is_rectangle(s_x - 15, s_y - y_i, 16, 1):
                     top = s_y - y_i
-            if top:
+            if top != -1:
                 break
+
         for x_i in range(1, max_search):
-            if left:
+            if left != -1:
                 if _is_rectangle(left, top, 1, bottom -  top + 1):
                     right = left + x_i
+                    break
             else:
                 if _is_rectangle(right-x_i, top, 1, bottom - top + 1):
                     left = right - x_i
+                    break
         return (left, right, top, bottom)
 
     def _load_map(start_pos):
-        def is_in(xx, yy, x, y, w, h):
-            return xx >= x and xx < x+w and yy >= y and yy < y+h
         lrtb = find_contour(*start_pos)
-        l, r, t, b = lrtb
-        xywh = (l, t, r - l + 1, b - t + 1)
+        left, right, top, bottom = lrtb
+        xywh = (left, top, right - left + 1, bottom - top + 1)
         doors = _find_doors(*xywh)
         maps.append({"xywh": xywh, "doors": doors})
         for d_x, d_y in doors:
+            
             s_pos = Vector2D(d_x, d_y)
             if get_tile(d_x, d_y) == DOOR_TILE_R:
                 s_pos += Vector2D(1, 0)
@@ -122,12 +149,14 @@ def load_map(start_door=Vector2D(0, 0), max_search=64):
                 s_pos += Vector2D(-1, 0)
 
             for map in maps:
-                if is_in(*s_pos, *map["xywh"]):
+                if _is_in(*s_pos, *map["xywh"]):
                     break
             else:
                 _load_map(s_pos)
 
     _load_map(start_door)
+    _link_doors_to_map(maps)
+
     return maps
 
 def extract_obj_from_tilemap(b, u, v, w, h):

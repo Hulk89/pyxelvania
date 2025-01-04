@@ -24,8 +24,6 @@ from srcs.vector import Vector2D
 
 def locked_tile_update():
     player = GameState.player
-    # NOTE: remove locked tile
-    # TODO: only when keys are added. maybe it will added to gamestate
     if player.direction_right:
         check_pos = player.pos + Vector2D(1, 0)
     else:
@@ -38,7 +36,6 @@ def locked_tile_update():
 
 def object_update():
     player = GameState.player
-
     objs = [o for o in Layer.obj if isinstance(o, _Object) or isinstance(o, _AObject)]
 
     for o in objs:
