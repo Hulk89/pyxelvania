@@ -49,8 +49,9 @@ def extract_obj_from_tilemap(b, u, v, w, h):
     ]
 
     removes = []
-    for cx in range(u, u + w // 8):
-        for cy in range(v, v + h // 8):
+    for cx in range(u//8, u//8 + w // 8):
+        for cy in range(v//8, v//8 + h // 8):
+            print(cx, cy)
             tile = get_tile(cx, cy, b)
             # TODO: make_object
             if tile in remove_obj:
