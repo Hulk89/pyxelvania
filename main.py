@@ -11,14 +11,14 @@ from srcs.constants import (
     BLANK_TILE
 )
 from srcs.base import Layer, Updatable
+from srcs.utils import colliding_wall
+from srcs.objects import _Object, _AObject
 from srcs.player import Player
 from srcs.fireball import FireBall
 from srcs.particles import ParticlesExplosion
 from srcs.enemies import Enemy
-from srcs.utils import colliding_wall
-from srcs.objects import _Object, _AObject
-
-from srcs.state import GameState, extract_obj_from_tilemap, load_map
+from srcs.state import GameState, extract_obj_from_tilemap
+from srcs.map_util import parse_map, is_in
 from srcs.vector import Vector2D
 
 
@@ -65,31 +65,24 @@ def attack_update():
     
 
 class App:
-    def load_map(self):
-        self.bank = 0
-        
-        maps = load_map(Vector2D(15, 6))
-        xywh = maps[0]["xywh"]
-        self.u = xywh[0] * 8
-        self.v = xywh[1] * 8
-        self.w = xywh[2] * 8
-        self.h = xywh[3] * 8
-        # NOTE: 이 부분만 고치면 됨
-        self.doors = [(door[0]*8, door[1]*8, 8, 8) for door in maps[0]["doors"]]
-        print(self.doors)
-        self.removes = extract_obj_from_tilemap(
-            self.bank, self.u, self.v, self.w, self.h
-        )
+    def load_map(self, idx):
+        maps = GameState.map_state
+        self.uvwh = tuple(p * 8 for p in maps[idx]["xywh"])
+        self.doors = [(door[0]*8, door[1]*8, 8, 8) for door in maps[idx]["doors"]]
+        self.link_to = maps[idx]["link_to"]
+        self.removes = extract_obj_from_tilemap(0, *self.uvwh)
 
 
     def __init__(self):
         px.init(128, 128)
         px.load("./assets/pyxelvania.pyxres")
+        GameState.map_state = parse_map(Vector2D(15, 6))
+        print(GameState.map_state)
         self.t = time()
 
         GameState.player = Player(Vector2D(24, 10))
         GameState.player_state["ckpt_pos"] = (24, 10)
-        self.load_map()
+        self.load_map(0)
 
         px.run(self.update, self.draw)
 
@@ -104,6 +97,23 @@ class App:
 
         for o in Updatable.updatables:
             o.update(dt, self.t)
+        
+        p_pos = GameState.player.pos
+        if not is_in(*p_pos, *self.uvwh):
+            map_idx = -1
+            min_dist = 10000
+            for idx, door in zip(self.link_to, self.doors):
+                door_center = Vector2D(door[0], door[1]) + Vector2D(4, 4)
+                player_center = p_pos + Vector2D(4, 4)
+                dist = (player_center - door_center).norm()
+                print(idx, door_center, dist)
+                if dist < min_dist:
+                    map_idx = idx
+                    min_dist = dist
+            self.load_map(map_idx)
+            print(map_idx, self.uvwh, p_pos)
+
+
 
     def remove_obj_tile(self):
         for r in self.removes:
@@ -114,7 +124,7 @@ class App:
         cam_pos = p_pos - Vector2D(64, 32)
         px.camera(*cam_pos)
         px.cls(BLACK)
-        px.bltm(0, 0, self.bank, self.u, self.v, self.w, self.h, PURPLE)
+        px.bltm(self.uvwh[0], self.uvwh[1], 0, *self.uvwh, PURPLE)
         px.clip(0, 0, 128,64)
         self.remove_obj_tile()
 
