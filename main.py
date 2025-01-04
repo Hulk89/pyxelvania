@@ -45,8 +45,9 @@ def object_update():
 
 def attack_update():
     player = GameState.player
-    fireballs = [o for o in Layer.fg if isinstance(o, FireBall)]
     enemies = [o for o in Layer.obj if isinstance(o, Enemy)]
+    fireballs = [o for o in Layer.fg if isinstance(o, FireBall)]
+    remove_objects = set()
 
     for e in enemies:
         e.direction_left = True if player.pos.x < e.pos.x else False
@@ -58,10 +59,12 @@ def attack_update():
                                vel_range=(5, 10))
         for f in fireballs:
             if e.collide_with(f):
-                f.remove()
                 e.hp -= GameState.player_state["damage"]
                 if e.hp <= 0:
-                    e.remove()
+                    remove_objects.add(e)
+                remove_objects.add(f)
+    for r in remove_objects:
+        r.remove()
     
 
 class App:
@@ -77,7 +80,6 @@ class App:
         px.init(128, 128)
         px.load("./assets/pyxelvania.pyxres")
         GameState.map_state = parse_map(Vector2D(15, 6))
-        print(GameState.map_state)
         self.t = time()
 
         GameState.player = Player(Vector2D(24, 10))
@@ -106,12 +108,10 @@ class App:
                 door_center = Vector2D(door[0], door[1]) + Vector2D(4, 4)
                 player_center = p_pos + Vector2D(4, 4)
                 dist = (player_center - door_center).norm()
-                print(idx, door_center, dist)
                 if dist < min_dist:
                     map_idx = idx
                     min_dist = dist
             self.load_map(map_idx)
-            print(map_idx, self.uvwh, p_pos)
 
 
 

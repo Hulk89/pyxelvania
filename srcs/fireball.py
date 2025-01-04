@@ -7,6 +7,7 @@ from .base import (
     CircleCollisionInterface,
     Sprite,
     Image,
+    Layer
 )
 from .particles import ParticlesExplosion
 from .utils import colliding_wall
@@ -20,6 +21,8 @@ class FireBall(CircleCollisionInterface, Updatable, Drawable):
         self.dx = DX if direction_right else -DX
         self.sprite = Sprite(Image(*FIREBALL), PURPLE)
         super().__init__(pos, 3, 3)
+        self.set_draw_layer(Layer.fg)
+        self.start_update()
 
     def update(self, dt, t):
         x, y = self.pos
@@ -43,4 +46,3 @@ class FireBall(CircleCollisionInterface, Updatable, Drawable):
         )
         self.stop_draw()
         self.stop_update()
-        del self

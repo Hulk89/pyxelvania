@@ -102,9 +102,7 @@ class Player(CircleCollisionInterface, Updatable, Drawable):
                 fb_pos = self.pos + Vector2D(8, 3)
             else:
                 fb_pos = self.pos + Vector2D(0, 3)
-            fb = FireBall(fb_pos, self.direction_right)
-            fb.start_update()
-            fb.set_draw_layer(Layer.fg)
+            _ = FireBall(fb_pos, self.direction_right)
         elif self.state not in ["jump-up", "jump-down", "attack", "slide"]:
             if on_pressed_left() or on_pressed_right():
                 self.change_state("run")

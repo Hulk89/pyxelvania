@@ -7,4 +7,4 @@ castlevania-like game with Pyxel
 - [] HUD 작업
 - [] 복수 맵 제작 후 돌아다녀보기
 - [] 미니맵 제작
-- [] enemy 둘 이상일 때 fireball 잘못날리면 죽는 버그 수정
+- [x] enemy 둘 이상일 때 fireball 잘못날리면 죽는 버그 수정
