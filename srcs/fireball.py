@@ -1,14 +1,7 @@
 import pyxel as px
 
 from .constants import PURPLE, ORANGE, YELLOW
-from .base import (
-    Updatable,
-    Drawable,
-    CircleCollisionInterface,
-    Sprite,
-    Image,
-    Layer
-)
+from .base import Updatable, Drawable, CircleCollisionInterface, Sprite, Image, Layer
 from .particles import ParticlesExplosion
 from .utils import colliding_wall
 

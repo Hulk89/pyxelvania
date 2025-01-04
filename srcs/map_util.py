@@ -3,6 +3,7 @@ from srcs.utils import get_tile
 from srcs.vector import Vector2D
 from srcs.constants import DOOR_TILE_R, DOOR_TILE_L, WALL_TILE
 
+
 def _is_rectangle(x, y, w, h):
     for x_i in range(x, x + w):
         if get_tile(x_i, y) not in [DOOR_TILE_L, DOOR_TILE_R, WALL_TILE]:
@@ -12,9 +13,10 @@ def _is_rectangle(x, y, w, h):
     for y_i in range(y, y + h):
         if get_tile(x, y_i) not in [DOOR_TILE_L, DOOR_TILE_R, WALL_TILE]:
             return False
-        if get_tile(x + w - 1, y_i)not in [DOOR_TILE_L, DOOR_TILE_R, WALL_TILE]:
+        if get_tile(x + w - 1, y_i) not in [DOOR_TILE_L, DOOR_TILE_R, WALL_TILE]:
             return False
     return True
+
 
 def _find_doors(x, y, w, h):
     doors = []
@@ -32,7 +34,8 @@ def _find_doors(x, y, w, h):
 
 
 def is_in(xx, yy, x, y, w, h):
-    return xx >= x and xx < x+w and yy >= y and yy < y+h
+    return xx >= x and xx < x + w and yy >= y and yy < y + h
+
 
 def _link_doors_to_map(maps):
     for i, curr_map in enumerate(maps):
@@ -52,7 +55,6 @@ def _link_doors_to_map(maps):
         curr_map["link_to"] = link_to
 
 
-
 def parse_map(start_door=Vector2D(0, 0), max_search=64):
     maps = []
 
@@ -67,7 +69,6 @@ def parse_map(start_door=Vector2D(0, 0), max_search=64):
             right = s_x
         else:
             left = s_x
-            
 
         # NOTE: floor only can wall_tile >= 16
         for y_i in range(1, max_search):
@@ -92,7 +93,7 @@ def parse_map(start_door=Vector2D(0, 0), max_search=64):
 
         for x_i in range(1, max_search):
             if left != -1:
-                if _is_rectangle(left + x_i, top, 1, bottom -  top + 1):
+                if _is_rectangle(left + x_i, top, 1, bottom - top + 1):
                     right = left + x_i
                     break
             elif right != 1:
@@ -128,4 +129,3 @@ def parse_map(start_door=Vector2D(0, 0), max_search=64):
     _link_doors_to_map(maps)
 
     return maps
-

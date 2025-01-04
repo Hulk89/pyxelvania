@@ -1,4 +1,12 @@
-from .base import Sprite, ASprite, Image, Drawable, Updatable, Layer, CircleCollisionInterface
+from .base import (
+    Sprite,
+    ASprite,
+    Image,
+    Drawable,
+    Updatable,
+    Layer,
+    CircleCollisionInterface,
+)
 
 
 class _Object(CircleCollisionInterface, Drawable):
@@ -9,14 +17,12 @@ class _Object(CircleCollisionInterface, Drawable):
 
     def draw(self):
         self.sprite.draw(self.pos)
-    
+
     def update_gamestate(self, state):
         pass
 
     def remove(self):
         self.stop_draw()
-        del self
-
 
 
 class _AObject(CircleCollisionInterface, Drawable, Updatable):
@@ -38,9 +44,6 @@ class _AObject(CircleCollisionInterface, Drawable, Updatable):
     def remove(self):
         self.stop_draw()
         self.stop_update()
-        del self
-
-
 
 
 class KeyObject(_Object):
@@ -72,7 +75,8 @@ class CKPTObject(_AObject):
         super().__init__(pos, [Image(16, 32, 8, 8), Image(24, 32, 8, 8)], 0.4)
 
     def update_gamestate(self, state):
-        state["ckpt_pos"] = (self.pos)
+        state["ckpt_pos"] = self.pos
+
 
 class HeartObject(_AObject):
     def __init__(self, pos):

@@ -1,4 +1,5 @@
 from typing import Union, TYPE_CHECKING
+
 if TYPE_CHECKING:
     from srcs.player import Player
 from srcs.constants import (
@@ -21,7 +22,7 @@ from srcs.enemies import Enemy1, Enemy2, Enemy3, Enemy4
 
 
 class GameState:
-    player : Union[None, 'Player'] = None
+    player: Union[None, "Player"] = None
     ## player state
     player_state = {
         "keys": 0,
@@ -29,10 +30,13 @@ class GameState:
         "max_jump": 1,
         "damage": 2,
         "slide": False,
-        "ckpt_pos": (0, 0)
+        "ckpt_pos": (0, 0),
     }
     map_state = []
+    eaten_item_pos = []
 
+
+# TODO: this function should be here??
 def extract_obj_from_tilemap(b, u, v, w, h):
     remove_obj = [
         NPC_1,
@@ -49,13 +53,14 @@ def extract_obj_from_tilemap(b, u, v, w, h):
     ]
 
     removes = []
-    for cx in range(u//8, u//8 + w // 8):
-        for cy in range(v//8, v//8 + h // 8):
+    for cx in range(u // 8, u // 8 + w // 8):
+        for cy in range(v // 8, v // 8 + h // 8):
             tile = get_tile(cx, cy, b)
-            # TODO: make_object
             if tile in remove_obj:
                 removes.append((0, 0, cx, cy))
                 pos = Vector2D(cx * 8, cy * 8)
+                if pos in GameState.eaten_item_pos:
+                    continue
                 if tile == ITEM_KEY:
                     _ = KeyObject(pos)
                 elif tile == ITEM_HEART:

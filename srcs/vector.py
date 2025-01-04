@@ -52,6 +52,17 @@ class Vector2D:
         subbed = tuple(a - b for a, b in zip(self, other))
         return Vector2D(*subbed)
 
+    def __floordiv__(self, scale):
+        divided = tuple(c // scale for c in self)
+        return Vector2D(*divided)
+
+    def __eq__(self, other):
+        for a, b in zip(self, other):
+            if a != b:
+                return False
+        else:
+            return True
+
     def __iter__(self):
         return self.values.__iter__()
 
