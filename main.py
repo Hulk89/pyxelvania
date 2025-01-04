@@ -2,7 +2,7 @@ from time import time
 
 import pyxel as px
 
-from srcs.constants import BLACK, PURPLE, GREEN, RED, LOCKED_TILE, BLANK_TILE
+from srcs.constants import BLACK, PURPLE, GREEN, RED, LOCKED_TILE, BLANK_TILE, WIDTH, HEIGHT
 from srcs.base import Layer, Updatable
 from srcs.utils import colliding_wall
 from srcs.objects import _Object, _AObject, CKPTObject
@@ -123,11 +123,12 @@ class App:
 
     def draw(self):
         p_pos = GameState.player.pos
-        cam_pos = p_pos - Vector2D(64, 32)
+        cam_pos = p_pos - Vector2D(WIDTH // 2, HEIGHT // 4)
         px.camera(*cam_pos)
         px.cls(BLACK)
+
+        px.clip(0, 0, WIDTH, HEIGHT // 2)
         px.bltm(self.uvwh[0], self.uvwh[1], 0, *self.uvwh, PURPLE)
-        px.clip(0, 0, 128, 64)
         self.remove_obj_tile()
 
         for o in Layer.bg:
@@ -135,6 +136,9 @@ class App:
         for o in Layer.obj:
             o.draw()
         for o in Layer.fg:
+            o.draw()
+        px.clip()
+        for o in Layer.popup_text:
             o.draw()
 
 

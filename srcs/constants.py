@@ -1,6 +1,6 @@
 # Pyxel config
 WIDTH = 128
-HEIGHT = 64
+HEIGHT = 128
 MID_W = WIDTH / 2
 MID_H = HEIGHT / 2
 
