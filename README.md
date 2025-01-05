@@ -10,4 +10,5 @@ castlevania-like game with Pyxel
 - [x] 플레이어 맞았을 때 뒤로 밀리며 하트 깎기
 - [x] checkpoint, reset, gameover
 - [x] 미니맵 제작
-- [] 맵 작업 및 난이도 조절
+- [x] 맵 작업 
+- [] 난이도 조절
