@@ -123,5 +123,8 @@ class HeartObject(_AObject):
         super().__init__(pos, [Image(16, 40, 8, 8), Image(24, 40, 8, 8)], 0.4)
 
     def update_gamestate(self, state):
+        from srcs.state import GameState
         Text("one more heart")
         state["hp"] += 1
+        GameState.player.hp = state["hp"]
+

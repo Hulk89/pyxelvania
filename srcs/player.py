@@ -1,6 +1,8 @@
+from time import time
 import pyxel as px
 
 from srcs.state import GameState
+from srcs.constants import RED, GREEN
 from srcs.base import (
     Updatable,
     Drawable,
@@ -12,6 +14,7 @@ from srcs.base import (
 from srcs.vector import Vector2D
 from srcs.utils import push_back, colliding_wall
 from srcs.fireball import FireBall
+from srcs.particles import ParticlesExplosion
 
 PLAYER = {
     "idle": {"frames": [(8, 0, 8, 8), (24, 0, 8, 8)], "loop": True},
@@ -20,6 +23,7 @@ PLAYER = {
     "jump-up": {"frames": [(24, 0, 8, 8), (24, 8, 8, 8)], "loop": True},
     "jump-down": {"frames": [(24, 0, 8, 8)], "loop": False},
     "slide": {"frames": [(24, 0, 8, 8), (32, 0, 8, 8)], "loop": False},
+
 }
 FREQ = 0.2
 
@@ -45,13 +49,16 @@ def on_pressed_attack():
 
 
 class Player(CircleCollisionInterface, Updatable, Drawable):
-    def __init__(self, pos):
+    def __init__(self, pos, hp):
         self.jump_cnt = 0
         self.direction_right = True
         self.dx = 0
         self.dy = 0
         self.vel = 40
+        self.hp = hp
         self.state = "idle"
+        self.is_damaged = False
+        self.damaged_time = time()
         self.asprites = {
             k: ASprite([Image(*uvwh) for uvwh in v["frames"]], FREQ, loop=v["loop"])
             for k, v in PLAYER.items()
@@ -73,6 +80,23 @@ class Player(CircleCollisionInterface, Updatable, Drawable):
             self.state = state
             self.asprites[state].reset()
 
+    def damaged(self, direction_left):
+        if not self.is_damaged:
+            self.damaged_time = time()
+            self.is_damaged = True
+            self.hp = max(0, self.hp - 1)
+            dpos = Vector2D(-8 if direction_left else 8, -4)
+            self.dy = 0
+            x, y = push_back(*self.pos, *dpos)
+            self.pos = Vector2D(x, int(y))
+
+            ParticlesExplosion(
+                self.pos + Vector2D(4, 4),
+                [RED, RED, GREEN],
+                duration=0.2,
+                num_particles=10,
+                vel_range=(5, 10),
+            )
     def update(self, dt, t):
         # NOTE: position delta calculation
         self.dy += 0.5
@@ -123,11 +147,18 @@ class Player(CircleCollisionInterface, Updatable, Drawable):
             self.change_state("idle")
         elif self.state == "slide" and (t - self.sprite.start_t) > 0.5:
             self.change_state("idle")
+
         if colliding_wall(x, y + 1, self.dy > 0)[0]:
             self.jump_cnt = 0
+
+        if (t - self.damaged_time) > 1:
+            self.is_damaged = False
         # NOTE: sprite update frame
         self.sprite.update(dt, t)
 
     def draw(self):
-        self.img.flip = self.direction_right == False
+        self.img.flip = not self.direction_right
+        if self.is_damaged:
+            px.dither(0.5)
         self.sprite.draw(self.pos)
+        px.dither(1)

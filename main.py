@@ -2,13 +2,12 @@ from time import time
 
 import pyxel as px
 
-from srcs.constants import BLACK, PURPLE, GREEN, RED, LOCKED_TILE, BLANK_TILE, WIDTH, HEIGHT
+from srcs.constants import BLACK, PURPLE, LOCKED_TILE, BLANK_TILE, WIDTH, HEIGHT
 from srcs.base import Layer, Updatable
 from srcs.utils import colliding_wall
 from srcs.objects import _Object, _AObject, CKPTObject
 from srcs.player import Player
 from srcs.fireball import FireBall
-from srcs.particles import ParticlesExplosion
 from srcs.enemies import Enemy
 from srcs.state import GameState, extract_obj_from_tilemap
 from srcs.map_util import parse_map, is_in
@@ -50,13 +49,8 @@ def attack_update():
     for e in enemies:
         e.direction_left = True if player.pos.x < e.pos.x else False
         if e.collide_with(player):
-            ParticlesExplosion(
-                player.pos + Vector2D(4, 4),
-                [RED, RED, GREEN],
-                duration=0.2,
-                num_particles=10,
-                vel_range=(5, 10),
-            )
+            player.damaged(e.direction_left)
+            
         for f in fireballs:
             if e.collide_with(f):
                 e.hp -= GameState.player_state["damage"]
@@ -88,7 +82,7 @@ class App:
         GameState.map_state = parse_map(Vector2D(15, 6))
         self.t = time()
 
-        GameState.player = Player(Vector2D(24, 10))
+        GameState.player = Player(Vector2D(24, 10), GameState.player_state["hp"])
         GameState.player_state["ckpt_pos"] = (24, 10)
 
         self.load_map(0)
@@ -121,6 +115,8 @@ class App:
                     map_idx = idx
                     min_dist = dist
             self.load_map(map_idx)
+        if GameState.player.hp <= 0:
+            print("TODO!!")
 
     def remove_obj_tile(self):
         for r in self.removes:
