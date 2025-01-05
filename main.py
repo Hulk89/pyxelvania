@@ -5,7 +5,7 @@ import pyxel as px
 from srcs.constants import BLACK, PURPLE, LOCKED_TILE, BLANK_TILE, WIDTH, HEIGHT
 from srcs.base import Layer, Updatable
 from srcs.utils import colliding_wall
-from srcs.objects import _Object, _AObject, CKPTObject
+from srcs.objects import _Object, _AObject, CKPTObject, NPCObject1, NPCObject2
 from srcs.player import Player
 from srcs.fireball import FireBall
 from srcs.enemies import Enemy
@@ -34,7 +34,9 @@ def object_update():
     for o in objs:
         if o.collide_with(player):
             o.update_gamestate(GameState.player_state)
-            if not isinstance(o, CKPTObject):
+            if not (isinstance(o, CKPTObject) or
+                    isinstance(o, NPCObject1) or
+                    isinstance(o, NPCObject2)):
                 GameState.eaten_item_pos.append(o.pos)
             o.remove()
 
