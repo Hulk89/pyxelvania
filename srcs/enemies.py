@@ -33,11 +33,12 @@ ENEMY_4_DICT = {
 
 
 class Enemy(CircleCollisionInterface, Updatable, Drawable):
-    def __init__(self, pos, info_dict, freq, hp, vel=2):
+    def __init__(self, pos, info_dict, freq, hp, vel=2, atk=1):
         self.max_hp = self.hp = hp
         self.direction_left = True
         self.dx = 0
         self.dy = 0
+        self.atk = atk
         self.vel = vel
         self.state = "run"
         self.asprites = {
@@ -96,9 +97,9 @@ class Enemy2(Enemy):
 
 class Enemy3(Enemy):
     def __init__(self, pos):
-        super().__init__(pos, ENEMY_3_DICT, 0.4, 5, 3)
+        super().__init__(pos, ENEMY_3_DICT, 0.4, 5, 3, 2)
 
 
 class Enemy4(Enemy):
     def __init__(self, pos):
-        super().__init__(pos, ENEMY_4_DICT, 0.2, 20, 5)
+        super().__init__(pos, ENEMY_4_DICT, 0.2, 20, 8, 2)

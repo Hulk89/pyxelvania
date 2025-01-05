@@ -52,7 +52,7 @@ def attack_update():
     for e in enemies:
         e.direction_left = True if player.pos.x < e.pos.x else False
         if e.collide_with(player):
-            player.damaged(e.direction_left)
+            player.damaged(e.direction_left, e.atk)
 
         for f in fireballs:
             if e.collide_with(f):
@@ -83,11 +83,14 @@ class App:
     def __init__(self):
         px.init(128, 128)
         px.load("./assets/pyxelvania.pyxres")
-        GameState.map_state = parse_map(Vector2D(15, 6))
         self.t = time()
-
-        GameState.player = Player(Vector2D(24, 10), GameState.player_state["hp"])
-        GameState.player_state["ckpt_pos"] = (24, 10)
+        # (24, 10), (15, 6)
+        # (24, 688), (15, 86)
+        start_pos = (24, 688)
+        start_door_pos = Vector2D(15, 86)
+        GameState.map_state = parse_map(start_door_pos)
+        GameState.player = Player(Vector2D(0, 0), GameState.player_state["hp"])
+        GameState.player_state["ckpt_pos"] = start_pos
         PlayerItemsHUD()
         MiniMapHUD()
         self.reset()

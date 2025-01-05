@@ -26,10 +26,10 @@ class PlayerItemsHUD(Drawable):
         remain_hp = GameState.player.hp
         p_jump = state["max_jump"] - GameState.player.jump_cnt
         offset = Vector2D(3, 3) + p_pos
-        px.rectb(*(self.pos + p_pos), WIDTH // 4, HEIGHT // 2, ORANGE)
+        px.rectb(*(self.pos + p_pos), WIDTH // 4 + 10, HEIGHT // 2, ORANGE)
         px.rectb(
             *(self.pos + p_pos + Vector2D(1, 1)),
-            WIDTH // 4 - 2,
+            WIDTH // 4 - 2 + 10,
             HEIGHT // 2 - 2,
             YELLOW,
         )
@@ -57,7 +57,7 @@ class PlayerItemsHUD(Drawable):
 
 class MiniMapHUD(Drawable):
     def __init__(self):
-        self.pos = Vector2D(-WIDTH // 4, HEIGHT // 4)
+        self.pos = Vector2D(-WIDTH // 4 + 10, HEIGHT // 4)
         self.set_draw_layer(Layer.hud)
 
     def draw(self):
@@ -65,10 +65,10 @@ class MiniMapHUD(Drawable):
         p_pos = GameState.player.pos
         offset = p_pos + Vector2D(3, 3)
         pos = self.pos + offset
-        px.rectb(*(self.pos + p_pos), WIDTH // 4 * 3, HEIGHT // 2, ORANGE)
+        px.rectb(*(self.pos + p_pos), WIDTH // 4 * 3 - 10, HEIGHT // 2, ORANGE)
         px.rectb(
             *(self.pos + p_pos + Vector2D(1, 1)),
-            WIDTH // 4 * 3 - 2,
+            WIDTH // 4 * 3 - 2 - 10,
             HEIGHT // 2 - 2,
             YELLOW,
         )
@@ -83,7 +83,7 @@ class MiniMapHUD(Drawable):
 
                 # NOTE: draw doors
                 for linked_idx in map["link_to"]:
-                    linked_xywh = maps[linked_idx]["xywh"]
+                    linked_xywh = tuple(p * 8 for p in maps[linked_idx]["xywh"])
                     if xywh[0] > linked_xywh[0]:
                         px.rect(*(pos + Vector2D(mx, my)), 1, mh, RED)
                     else:

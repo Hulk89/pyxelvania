@@ -82,11 +82,11 @@ class Player(CircleCollisionInterface, Updatable, Drawable):
     def add_hp(self, hp):
         self.hp = min(self.hp + hp, GameState.player_state["hp"])
 
-    def damaged(self, direction_left):
+    def damaged(self, direction_left, dmg):
         if not self.is_damaged:
             self.damaged_time = time()
             self.is_damaged = True
-            self.hp = max(0, self.hp - 1)
+            self.hp = max(0, self.hp - dmg)
             dpos = Vector2D(-8 if direction_left else 8, -4)
             self.dy = 0
             x, y = push_back(*self.pos, *dpos)
