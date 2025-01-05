@@ -13,6 +13,8 @@ from srcs.enemies import Enemy
 from srcs.state import GameState, extract_obj_from_tilemap
 from srcs.map_util import parse_map, is_in
 from srcs.vector import Vector2D
+from srcs.hud import PlayerItemsHUD
+
 
 
 def locked_tile_update():
@@ -88,7 +90,10 @@ class App:
 
         GameState.player = Player(Vector2D(24, 10))
         GameState.player_state["ckpt_pos"] = (24, 10)
+
         self.load_map(0)
+        PlayerItemsHUD()
+
 
         px.run(self.update, self.draw)
 
@@ -138,6 +143,8 @@ class App:
         for o in Layer.fg:
             o.draw()
         px.clip()
+        for o in Layer.hud:
+            o.draw()
         for o in Layer.popup_text:
             o.draw()
 

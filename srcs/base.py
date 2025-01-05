@@ -10,6 +10,7 @@ class Layer:
     bg = []  # 배경
     obj = []  # 캐릭터, object
     fg = []  # 화염구, effect
+    hud = []
     popup_text = []
 
 
