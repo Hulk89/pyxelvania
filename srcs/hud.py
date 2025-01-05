@@ -52,7 +52,7 @@ class PlayerItemsHUD(Drawable):
             self.sprites["key"].draw(pos)
 
         dmg_pos = self.pos + Vector2D(0, 32) + offset
-        px.text(*dmg_pos, f"atk : {state['damage']}", WHITE)
+        px.text(*dmg_pos, f"atk : {state['max_bullet']}", WHITE)
 
 
 class MiniMapHUD(Drawable):

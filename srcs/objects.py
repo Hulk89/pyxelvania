@@ -130,6 +130,15 @@ class HeartObject(_AObject):
         GameState.player.hp = state["hp"]
 
 
+class MagicStickObject(_AObject):
+    def __init__(self, pos):
+        super().__init__(pos, [Image(32, 32, 8, 8), Image(40, 32, 8, 8)], 0.4)
+
+    def update_gamestate(self, state):
+        Text("One more Fireball")
+        state["max_bullet"] += 1
+
+
 class NPCObject1(_AObject):
     def __init__(self, pos):
         super().__init__(pos, [Image(48, 16, 8, 8), Image(56, 16, 8, 8)], 0.1)

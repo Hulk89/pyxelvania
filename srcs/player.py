@@ -125,11 +125,13 @@ class Player(CircleCollisionInterface, Updatable, Drawable):
             self.change_state("slide")
         elif on_pressed_attack():
             self.change_state("attack")
-            if self.direction_right:
-                fb_pos = self.pos + Vector2D(8, 3)
-            else:
-                fb_pos = self.pos + Vector2D(0, 3)
-            _ = FireBall(fb_pos, self.direction_right)
+            fb_len = len([f for f in Layer.fg if isinstance(f, FireBall)])
+            if fb_len < GameState.player_state["max_bullet"]:
+                if self.direction_right:
+                    fb_pos = self.pos + Vector2D(8, 3)
+                else:
+                    fb_pos = self.pos + Vector2D(0, 3)
+                _ = FireBall(fb_pos, self.direction_right)
         elif self.state not in ["jump-up", "jump-down", "attack", "slide"]:
             if on_pressed_left() or on_pressed_right():
                 self.change_state("run")

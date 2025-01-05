@@ -10,6 +10,7 @@ from srcs.constants import (
     ITEM_HEART,
     ITEM_SLIDE,
     ITEM_DBJMP,
+    ITEM_MAGICSTICK,
     ENEMY_1,
     ENEMY_2,
     ENEMY_3,
@@ -17,6 +18,7 @@ from srcs.constants import (
 )
 from srcs.objects import (
     KeyObject,
+    MagicStickObject,
     SlideObject,
     DJumpObject,
     CKPTObject,
@@ -39,6 +41,7 @@ class GameState:
         "damage": 2,
         "slide": False,
         "ckpt_pos": (0, 0),
+        "max_bullet": 2,
     }
     map_state = []
     visited_map = set()
@@ -55,6 +58,7 @@ def extract_obj_from_tilemap(b, u, v, w, h):
         ITEM_HEART,
         ITEM_CKPT,
         ITEM_KEY,
+        ITEM_MAGICSTICK,
         ENEMY_1,
         ENEMY_2,
         ENEMY_3,
@@ -80,6 +84,8 @@ def extract_obj_from_tilemap(b, u, v, w, h):
                     _ = DJumpObject(pos)
                 elif tile == ITEM_CKPT:
                     _ = CKPTObject(pos)
+                elif tile == ITEM_MAGICSTICK:
+                    _ = MagicStickObject(pos)
                 elif tile == ENEMY_1:
                     _ = Enemy1(pos)
                 elif tile == ENEMY_2:
