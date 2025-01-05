@@ -85,11 +85,21 @@ class App:
 
         GameState.player = Player(Vector2D(24, 10), GameState.player_state["hp"])
         GameState.player_state["ckpt_pos"] = (24, 10)
-
-        self.load_map(0)
         PlayerItemsHUD()
-
+        self.reset()
         px.run(self.update, self.draw)
+
+    def reset(self):
+        GameState.player.pos = Vector2D(*GameState.player_state["ckpt_pos"])
+        for i, map in enumerate(GameState.map_state):
+            uvwh = tuple(p * 8 for p in map["xywh"])
+            if is_in(*GameState.player.pos, *uvwh):
+                self.load_map(i)
+                GameState.player.hp = GameState.player_state["hp"]
+                GameState.player.is_damaged = True
+                GameState.player.damaged_time = time()
+                break
+
 
     def update(self):
         current_t = time()
@@ -116,7 +126,7 @@ class App:
                     min_dist = dist
             self.load_map(map_idx)
         if GameState.player.hp <= 0:
-            print("TODO!!")
+            self.reset()
 
     def remove_obj_tile(self):
         for r in self.removes:

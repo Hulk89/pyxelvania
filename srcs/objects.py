@@ -132,7 +132,7 @@ class HeartObject(_AObject):
 
 class NPCObject1(_AObject):
     def __init__(self, pos):
-        super().__init__(pos, [Image(48, 16, 8, 8), Image(56, 16, 8, 8)], 0.4)
+        super().__init__(pos, [Image(48, 16, 8, 8), Image(56, 16, 8, 8)], 0.1)
 
     def update_gamestate(self, state):
         from srcs.state import GameState
@@ -143,7 +143,7 @@ class NPCObject1(_AObject):
 
 class NPCObject2(_AObject):
     def __init__(self, pos):
-        super().__init__(pos, [Image(48, 24, 8, 8), Image(56, 24, 8, 8)], 0.4)
+        super().__init__(pos, [Image(48, 24, 8, 8), Image(56, 24, 8, 8)], 0.2)
 
     def update_gamestate(self, state):
         from srcs.state import GameState
