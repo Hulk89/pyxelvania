@@ -23,7 +23,6 @@ PLAYER = {
     "jump-up": {"frames": [(24, 0, 8, 8), (24, 8, 8, 8)], "loop": True},
     "jump-down": {"frames": [(24, 0, 8, 8)], "loop": False},
     "slide": {"frames": [(24, 0, 8, 8), (32, 0, 8, 8)], "loop": False},
-
 }
 FREQ = 0.2
 
@@ -80,6 +79,9 @@ class Player(CircleCollisionInterface, Updatable, Drawable):
             self.state = state
             self.asprites[state].reset()
 
+    def add_hp(self, hp):
+        self.hp = min(self.hp + hp, GameState.player_state["hp"])
+
     def damaged(self, direction_left):
         if not self.is_damaged:
             self.damaged_time = time()
@@ -97,6 +99,7 @@ class Player(CircleCollisionInterface, Updatable, Drawable):
                 num_particles=10,
                 vel_range=(5, 10),
             )
+
     def update(self, dt, t):
         # NOTE: position delta calculation
         self.dy += 0.5

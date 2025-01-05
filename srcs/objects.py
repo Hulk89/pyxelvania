@@ -50,6 +50,7 @@ class _AObject(CircleCollisionInterface, Drawable, Updatable):
         self.stop_draw()
         self.stop_update()
 
+
 class Text(Drawable, Updatable):
     def __init__(self, text):
         for t in reversed(Layer.popup_text):
@@ -68,6 +69,7 @@ class Text(Drawable, Updatable):
     def draw(self):
         # TODO: 마음에 안들어...
         from srcs.state import GameState
+
         draw_pos = GameState.player.pos + Vector2D(-len(self.text) * 2, HEIGHT // 4)
 
         px.text(*(draw_pos + Vector2D(-1, 0)), self.text, BLUE)
@@ -79,8 +81,6 @@ class Text(Drawable, Updatable):
     def remove(self):
         self.stop_draw()
         self.stop_update()
-
-
 
 
 class KeyObject(_Object):
@@ -124,7 +124,29 @@ class HeartObject(_AObject):
 
     def update_gamestate(self, state):
         from srcs.state import GameState
+
         Text("one more heart")
         state["hp"] += 1
         GameState.player.hp = state["hp"]
 
+
+class NPCObject1(_AObject):
+    def __init__(self, pos):
+        super().__init__(pos, [Image(48, 16, 8, 8), Image(56, 16, 8, 8)], 0.4)
+
+    def update_gamestate(self, state):
+        from srcs.state import GameState
+
+        Text("Thank you!!")
+        GameState.player.add_hp(1)
+
+
+class NPCObject2(_AObject):
+    def __init__(self, pos):
+        super().__init__(pos, [Image(48, 24, 8, 8), Image(56, 24, 8, 8)], 0.4)
+
+    def update_gamestate(self, state):
+        from srcs.state import GameState
+
+        Text("Thank you!!")
+        GameState.player.add_hp(2)

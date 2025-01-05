@@ -15,7 +15,15 @@ from srcs.constants import (
     ENEMY_3,
     ENEMY_4,
 )
-from srcs.objects import KeyObject, SlideObject, DJumpObject, CKPTObject, HeartObject
+from srcs.objects import (
+    KeyObject,
+    SlideObject,
+    DJumpObject,
+    CKPTObject,
+    HeartObject,
+    NPCObject1,
+    NPCObject2,
+)
 from srcs.utils import get_tile
 from srcs.vector import Vector2D
 from srcs.enemies import Enemy1, Enemy2, Enemy3, Enemy4
@@ -79,5 +87,9 @@ def extract_obj_from_tilemap(b, u, v, w, h):
                     _ = Enemy3(pos)
                 elif tile == ENEMY_4:
                     _ = Enemy4(pos)
+                elif tile == NPC_1:
+                    _ = NPCObject1(pos)
+                elif tile == NPC_2:
+                    _ = NPCObject2(pos)
 
     return removes

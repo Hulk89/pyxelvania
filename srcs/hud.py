@@ -5,9 +5,10 @@ from srcs.state import GameState
 from srcs.base import Image, Layer, Drawable, Sprite
 from srcs.vector import Vector2D
 
+
 class PlayerItemsHUD(Drawable):
     def __init__(self):
-        self.pos = Vector2D(-WIDTH // 2, HEIGHT //4)
+        self.pos = Vector2D(-WIDTH // 2, HEIGHT // 4)
 
         self.sprites = {
             "key": Sprite(Image(16, 16, 8, 8)),
@@ -24,10 +25,14 @@ class PlayerItemsHUD(Drawable):
         remain_hp = GameState.player.hp
         p_jump = state["max_jump"] - GameState.player.jump_cnt
         offset = Vector2D(3, 3) + p_pos
-        px.rectb(*(self.pos + p_pos ), WIDTH//4, HEIGHT//2, ORANGE)
-        px.rectb(*(self.pos + p_pos + Vector2D(1, 1)), WIDTH//4 - 2, HEIGHT//2 - 2, YELLOW)
-        
- 
+        px.rectb(*(self.pos + p_pos), WIDTH // 4, HEIGHT // 2, ORANGE)
+        px.rectb(
+            *(self.pos + p_pos + Vector2D(1, 1)),
+            WIDTH // 4 - 2,
+            HEIGHT // 2 - 2,
+            YELLOW,
+        )
+
         for i in range(state["hp"]):
             pos = self.pos + Vector2D(i * 8, 0) + offset
             self.sprites["damaged-hp"].draw(pos)
@@ -42,7 +47,7 @@ class PlayerItemsHUD(Drawable):
             self.sprites["slide"].draw(pos)
 
         for i in range(state["keys"]):
-            pos = self.pos + Vector2D(i*8, 24) + offset
+            pos = self.pos + Vector2D(i * 8, 24) + offset
             self.sprites["key"].draw(pos)
 
         dmg_pos = self.pos + Vector2D(0, 32) + offset

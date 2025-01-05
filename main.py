@@ -15,7 +15,6 @@ from srcs.vector import Vector2D
 from srcs.hud import PlayerItemsHUD
 
 
-
 def locked_tile_update():
     player = GameState.player
     if player.direction_right:
@@ -50,7 +49,7 @@ def attack_update():
         e.direction_left = True if player.pos.x < e.pos.x else False
         if e.collide_with(player):
             player.damaged(e.direction_left)
-            
+
         for f in fireballs:
             if e.collide_with(f):
                 e.hp -= GameState.player_state["damage"]
@@ -87,7 +86,6 @@ class App:
 
         self.load_map(0)
         PlayerItemsHUD()
-
 
         px.run(self.update, self.draw)
 
