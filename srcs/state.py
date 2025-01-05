@@ -41,6 +41,7 @@ class GameState:
         "ckpt_pos": (0, 0),
     }
     map_state = []
+    visited_map = set()
     eaten_item_pos = []
 
 

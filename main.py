@@ -12,7 +12,7 @@ from srcs.enemies import Enemy
 from srcs.state import GameState, extract_obj_from_tilemap
 from srcs.map_util import parse_map, is_in
 from srcs.vector import Vector2D
-from srcs.hud import PlayerItemsHUD
+from srcs.hud import MiniMapHUD, PlayerItemsHUD
 
 
 def locked_tile_update():
@@ -34,9 +34,11 @@ def object_update():
     for o in objs:
         if o.collide_with(player):
             o.update_gamestate(GameState.player_state)
-            if not (isinstance(o, CKPTObject) or
-                    isinstance(o, NPCObject1) or
-                    isinstance(o, NPCObject2)):
+            if not (
+                isinstance(o, CKPTObject)
+                or isinstance(o, NPCObject1)
+                or isinstance(o, NPCObject2)
+            ):
                 GameState.eaten_item_pos.append(o.pos)
             o.remove()
 
@@ -76,6 +78,7 @@ class App:
         self.doors = [(door[0] * 8, door[1] * 8, 8, 8) for door in maps[idx]["doors"]]
         self.link_to = maps[idx]["link_to"]
         self.removes = extract_obj_from_tilemap(0, *self.uvwh)
+        GameState.visited_map.add(idx)
 
     def __init__(self):
         px.init(128, 128)
@@ -86,6 +89,7 @@ class App:
         GameState.player = Player(Vector2D(24, 10), GameState.player_state["hp"])
         GameState.player_state["ckpt_pos"] = (24, 10)
         PlayerItemsHUD()
+        MiniMapHUD()
         self.reset()
         px.run(self.update, self.draw)
 
@@ -99,7 +103,6 @@ class App:
                 GameState.player.is_damaged = True
                 GameState.player.damaged_time = time()
                 break
-
 
     def update(self):
         current_t = time()

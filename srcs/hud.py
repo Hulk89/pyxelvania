@@ -1,9 +1,10 @@
 import pyxel as px
 
-from srcs.constants import WHITE, WIDTH, HEIGHT, YELLOW, ORANGE
+from srcs.constants import RED, WHITE, WIDTH, HEIGHT, YELLOW, ORANGE
 from srcs.state import GameState
 from srcs.base import Image, Layer, Drawable, Sprite
 from srcs.vector import Vector2D
+from srcs.map_util import is_in
 
 
 class PlayerItemsHUD(Drawable):
@@ -52,3 +53,38 @@ class PlayerItemsHUD(Drawable):
 
         dmg_pos = self.pos + Vector2D(0, 32) + offset
         px.text(*dmg_pos, f"atk : {state['damage']}", WHITE)
+
+
+class MiniMapHUD(Drawable):
+    def __init__(self):
+        self.pos = Vector2D(-WIDTH // 4, HEIGHT // 4)
+        self.set_draw_layer(Layer.hud)
+
+    def draw(self):
+        maps = GameState.map_state
+        p_pos = GameState.player.pos
+        offset = p_pos + Vector2D(3, 3)
+        pos = self.pos + offset
+        px.rectb(*(self.pos + p_pos), WIDTH // 4 * 3, HEIGHT // 2, ORANGE)
+        px.rectb(
+            *(self.pos + p_pos + Vector2D(1, 1)),
+            WIDTH // 4 * 3 - 2,
+            HEIGHT // 2 - 2,
+            YELLOW,
+        )
+
+        for idx, map in enumerate(maps):
+            if idx in GameState.visited_map:
+                mx, my, mw, mh = tuple(p // 2 for p in map["xywh"])
+                xywh = tuple(p * 8 for p in map["xywh"])
+                if is_in(*p_pos, *xywh):
+                    px.rect(*(pos + Vector2D(mx, my)), mw, mh, ORANGE)
+                px.rectb(*(pos + Vector2D(mx, my)), mw, mh, WHITE)
+
+                # NOTE: draw doors
+                for linked_idx in map["link_to"]:
+                    linked_xywh = maps[linked_idx]["xywh"]
+                    if xywh[0] > linked_xywh[0]:
+                        px.rect(*(pos + Vector2D(mx, my)), 1, mh, RED)
+                    else:
+                        px.rect(*(pos + Vector2D(mx + mw - 1, my)), 1, mh, RED)
