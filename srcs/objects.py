@@ -52,17 +52,18 @@ class _AObject(CircleCollisionInterface, Drawable, Updatable):
 
 
 class Text(Drawable, Updatable):
-    def __init__(self, text):
+    def __init__(self, text, duration=2):
         for t in reversed(Layer.popup_text):
             t.remove()
 
         self.time = time()
+        self.duration = duration
         self.text = text
         self.set_draw_layer(Layer.popup_text)
         self.start_update()
 
     def update(self, dt, t):
-        if t - self.time > 2:
+        if t - self.time > self.duration:
             self.stop_draw()
             self.stop_update()
 
@@ -70,7 +71,7 @@ class Text(Drawable, Updatable):
         # TODO: 마음에 안들어...
         from srcs.state import GameState
 
-        draw_pos = GameState.player.pos + Vector2D(-len(self.text) * 2, HEIGHT // 4)
+        draw_pos = GameState.player.pos + Vector2D(-len(self.text.split("\n")[0]) * 2, HEIGHT // 4)
 
         px.text(*(draw_pos + Vector2D(-1, 0)), self.text, BLUE)
         px.text(*(draw_pos + Vector2D(1, 0)), self.text, BLUE)
@@ -137,6 +138,15 @@ class MagicStickObject(_AObject):
     def update_gamestate(self, state):
         Text("One more Fireball")
         state["max_bullet"] += 1
+
+
+class EndGameObject(_AObject):
+    def __init__(self, pos):
+        super().__init__(pos, [Image(0, 48, 8, 8), Image(8, 48, 8, 8)], 0.4)
+
+    def update_gamestate(self, state):
+        Text(" Thank you \nfor playing!", duration=100)
+
 
 
 class NPCObject1(_AObject):

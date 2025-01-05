@@ -11,12 +11,14 @@ from srcs.constants import (
     ITEM_SLIDE,
     ITEM_DBJMP,
     ITEM_MAGICSTICK,
+    ITEM_ENDGAME,
     ENEMY_1,
     ENEMY_2,
     ENEMY_3,
     ENEMY_4,
 )
 from srcs.objects import (
+    EndGameObject,
     KeyObject,
     MagicStickObject,
     SlideObject,
@@ -59,6 +61,7 @@ def extract_obj_from_tilemap(b, u, v, w, h):
         ITEM_CKPT,
         ITEM_KEY,
         ITEM_MAGICSTICK,
+        ITEM_ENDGAME,
         ENEMY_1,
         ENEMY_2,
         ENEMY_3,
@@ -86,6 +89,8 @@ def extract_obj_from_tilemap(b, u, v, w, h):
                     _ = CKPTObject(pos)
                 elif tile == ITEM_MAGICSTICK:
                     _ = MagicStickObject(pos)
+                elif tile == ITEM_ENDGAME:
+                    _ = EndGameObject(pos)
                 elif tile == ENEMY_1:
                     _ = Enemy1(pos)
                 elif tile == ENEMY_2:

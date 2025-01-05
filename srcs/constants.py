@@ -20,6 +20,7 @@ ITEM_CKPT = (2, 4)
 ITEM_SLIDE = (0, 5)
 ITEM_DBJMP = (1, 5)
 ITEM_MAGICSTICK = (4, 4)
+ITEM_ENDGAME = (0, 6)
 
 # NPC
 NPC_1 = (6, 2)
