@@ -17,6 +17,9 @@ from srcs.hud import MiniMapHUD, PlayerItemsHUD
 
 def locked_tile_update():
     player = GameState.player
+    if player is None:
+        return
+
     if player.direction_right:
         check_pos = player.pos + Vector2D(1, 0)
     else:
